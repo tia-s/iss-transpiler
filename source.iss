@@ -1,29 +1,23 @@
-' Create a many to many match of the records to be analysed.
-Function Join_Transaction_Status
-If haveRecords("Transaction Audit Change.IMD") Then
-	Set db = Client.OpenDatabase("Transaction Audit Change.IMD")
-	Set task = db.TableManagement
-	Set field = db.TableDef.NewField
-		field.Name = "COMP_DORMANT_TXN1"
-		task.AppendField field
-	Set field = Nothing
+Function Add_Account_Info_to_Transaction
+If haveRecords("General Acct Master Lite.IMD")  And haveRecords("General Acct2 Master Lite.IMD")Then
+	Set db = Client.OpenDatabase("General Acct Master Lite.IMD")
+	Set task = db.Extraction
+		task.AddFieldToInc "FORACID"
+		task.AddFieldToInc "ACID"
+		task.AddFieldToInc "ACCT_NAME"
+		task.AddFieldToInc "CUST_NAME"
+		task.AddFieldToInc "CUST_PERM_ADDR1"
+		task.AddFieldToInc "CUST_PERM_ADDR2"
+		task.AddFieldToInc "SCHM_DESC"
+		task.AddFieldToInc "CUSTOMER_TYPE"
+		dbName = "GAM Extract.IMD"
+		task.AddExtraction dbName, "", ""
+		task.CreateVirtualDatabase = False
+		task.PerformTask 1, db.Count
 	Set task = Nothing
 	Set db = Nothing
-End If
-If haveRecords("Transaction Audit Change.IMD") Then
-	Set db = Client.OpenDatabase("Transaction Audit Change.IMD")
-	Set task = db.TableManagement
-	Set field = db.TableDef.NewField
-		field.Name = "COMP_DORMANT_TXN1"
-		field.Description = ""
-		field.Type = WI_VIRT_CHAR
-		field.Equation = ""
-		field.Length = 1
-		task.AppendField field
-	Set field = Nothing
-	Set task = Nothing
-	Set db = Nothing
+Else
+	Call logfile("General Acct Master Lite.IMD", "Add_Account_Info_to_Transaction", "Direct Extraction", "Error", "Databases empty or does not exist.")		
 End If
 End Function
-' Create a many to many match of the records to be analysed.
 

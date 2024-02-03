@@ -7,7 +7,7 @@ def main():
         grammar = f.read()
         text = ff.read()
 
-    parser = Lark(grammar=grammar, start='start', parser='lalr')
+    parser = Lark(grammar=grammar, start='prog', parser='lalr')
 
     tree = parser.parse(text)
 
@@ -15,6 +15,7 @@ def main():
     transformer = IDEATransformer(translator)
     flattened = transformer.transform(tree)
 
+    print(tree.pretty())
     print(flattened)
 
 if __name__ == "__main__":

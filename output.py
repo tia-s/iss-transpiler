@@ -1,0 +1,1 @@
+('variable', fso, {'declare': 'object'})
