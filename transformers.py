@@ -203,16 +203,21 @@ class NewTransformer(Transformer):
         self.translator = translator
         self.add_fields_to_total = []
         self.add_fields_to_summarize = []
+        self.add_fields_to_inc = []
         self.summarize_task_opts = {}
         self.have_recs_list = []
+        self.summarize_agg_funcs_list = []
 
         Token.__repr__ = lambda self: self.value
 
     def _reset(self):
         self.add_fields_to_total = []
         self.add_fields_to_summarize = []
+        self.add_fields_to_inc = []
         self.summarize_task_opts = {}
         self.have_recs_list = []
+        self.summarize_agg_funcs_list = []
+
 
     """ Global Rules """
     def STRING_LITERAL(self, token):
@@ -234,6 +239,9 @@ class NewTransformer(Transformer):
     
     def st_nts(self, *_):
         return "Set Nothings"
+    
+    def iss_match_method(self, token):
+        return token
     
     """ Bp Function Rules """
     def bp_std_fns(self, *_):
@@ -295,8 +303,16 @@ class NewTransformer(Transformer):
     def e_add_field_to_total(self, token):
         self.add_fields_to_total.append(token)
 
-    def e_summ_criteria(self, token):
-        return {"Criteria": token}
+    def e_add_fields_to_inc(self, *_):
+        return {"Add to Inc": self.add_fields_to_inc}
+    
+    def e_add_field_to_inc(self, token):
+        self.add_fields_to_inc.append(token)
+
+    def e_summ_criteria(self, *tokens):
+        # deal with criteria (call filter)
+        # return {"Criteria": tokens[1]}
+        return {"Criteria": ""}
 
     def e_summ_output_db_name(self, *_):
         return {"Output DB Name": ""}
@@ -313,13 +329,14 @@ class NewTransformer(Transformer):
     def e_summ_db_name(self, id):
         self.summarize_task_opts.update({"dbname": id})
     
-    def s_stats_opts(self, token):
-        return {"stat": token}
+    def s_stats_opts(self, *_):
+        return {"stats": self.summarize_agg_funcs_list}
     
-
-    
-
+    def SM_SUM(self, *_):
+        self.summarize_agg_funcs_list.append("SM_SUM")
         
+    def SM_AVERAGE(self, *_):
+        self.summarize_agg_funcs_list.append("SM_AVERAGE")
 
 
 
