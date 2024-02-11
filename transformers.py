@@ -16,8 +16,8 @@ class IDEATransformer(Transformer):
     def tree_str(self):
         return f"{self.children}"
     
-    Token.__repr__ = token_str
-    Tree.__repr__ = tree_str
+    # Token.__repr__ = token_str
+    # Tree.__repr__ = tree_str
     
     """ Global Rules """
     def prog(self, start):
@@ -196,5 +196,152 @@ class IDEATransformer(Transformer):
         return "double"
     
 
+@v_args(inline=True)
+class NewTransformer(Transformer):   
+    # consider creating instances of objects instead of making dictionaries/lists like this
+    def __init__(self, translator):
+        self.translator = translator
+        self.add_fields_to_total = []
+        self.add_fields_to_summarize = []
+        self.summarize_task_opts = {}
+        self.have_recs_list = []
+
+        Token.__repr__ = lambda self: self.value
+
+    def _reset(self):
+        self.add_fields_to_total = []
+        self.add_fields_to_summarize = []
+        self.summarize_task_opts = {}
+        self.have_recs_list = []
+
+    """ Global Rules """
+    def STRING_LITERAL(self, token):
+        return str(token[1:-1])
+
+    def COMMENT(self, comment):
+        comment = comment.replace('\'', '')
+        self.translator.comment(comment)
+    
+    def s_bools(self, token):
+        return token
+    
+    """ Struct Rules """
+    def struct_cond_decl(self, _, id):
+        self.translator.define_function(id)
+
+    def struct_cond_tnl(self, *_):
+        self.translator.end_function()
+    
+    def st_nts(self, *_):
+        return "Set Nothings"
+    
+    """ Bp Function Rules """
+    def bp_std_fns(self, *_):
+        # could either set these to be empty here or empty them after call to function
+        self._reset()
+
+    def have_records_check_decl(self, *_):
+        # call if have records
+        return "Have Records Check"
+    
+    def have_records_opts(self, *_):
+        self.translator.bp_cond_check(self.have_recs_list)
+    
+    def have_records_opt(self, token):
+        self.have_recs_list.append(token)
+
+    def have_records(self, _, id):
+        return id
+
+    def have_records_check_tnl(self, *_):
+        self.translator.bp_cond_end()
+    
+    def have_records_check_else(self, _, bp_method_opts):
+        # log to file
+        return {"log": bp_method_opts}
+    
+    def bp_method_opts(self, id):
+        return id
+    
+    def st_open_db(self, id):
+        self.translator.open_table(id)
+    
+    """ Summarization Rules """
+    def d_summarize(self, *_):
+        # summby
+        self.translator.summarize(self.summarize_task_opts)
+    
+    def e_summarize_opts(self, *_):
+        return self.summarize_task_opts
+    
+    def e_summarize_opt(self, token):
+        return token
+    
+    def e_summarize_task_opts(self, token):
+        return token
+
+    def s_summarize_task_opts(self, token):
+        self.summarize_task_opts.update(token)
+
+    def e_add_fields_to_summarize(self, *_):
+        return {"Add to Summarize": self.add_fields_to_summarize}
+    
+    def e_add_field_to_summarize(self, token):
+        self.add_fields_to_summarize.append(token)
+
+    def e_add_fields_to_total(self, *_):
+        return {"Add to Total": self.add_fields_to_total}
+    
+    def e_add_field_to_total(self, token):
+        self.add_fields_to_total.append(token)
+
+    def e_summ_criteria(self, token):
+        return {"Criteria": token}
+
+    def e_summ_output_db_name(self, *_):
+        return {"Output DB Name": ""}
+
+    def e_summ_create_percent_field(self, token):
+        return {"create_percnt": token}
+    
+    def e_summ_statistics_to_include(self, token):
+        return token
+
+    def e_perform_task(self, *_):
+        return {"Perform Task": ""}
+
+    def e_summ_db_name(self, id):
+        self.summarize_task_opts.update({"dbname": id})
+    
+    def s_stats_opts(self, token):
+        return {"stat": token}
+    
+
+    
+
+        
+
+
+
+
+
+
+
+    # def std_fns_decl(self, *tokens):
+    #     return {"open_db": tokens[0], "fn": tokens[1]}
+    
+    # def std_fns_opts(self, *tokens):
+    #     return tokens
+    
+    # def st_fn(self, token):
+    #     return token
+    
+
+
+
+    
+
+
+    
 if __name__ == "__main__":
     pass

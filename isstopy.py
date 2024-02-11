@@ -1,9 +1,9 @@
 from lark import Lark
 from translators import RDMTranslator
-from transformers import IDEATransformer
+from transformers import NewTransformer
 
 def main():
-    with open('grammar.g', 'r') as f, open('source.iss', 'r') as ff:
+    with open('n_grammar.g', 'r') as f, open('source.iss', 'r') as ff:
         grammar = f.read()
         text = ff.read()
 
@@ -12,7 +12,7 @@ def main():
     tree = parser.parse(text)
 
     translator = RDMTranslator()
-    transformer = IDEATransformer(translator)
+    transformer = NewTransformer(translator)
     flattened = transformer.transform(tree)
 
     print(tree.pretty())

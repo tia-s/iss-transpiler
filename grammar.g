@@ -27,9 +27,10 @@ const_v: "Const"
 global_v: "Global"
 reg_v: "Dim"
 val_opts: STRING_LITERAL | INT
-type_opts: type_str | type_obj | type_double
+type_opts: type_str | type_obj | type_double | type_date
 type_str: "String" 
 type_obj: "Object" 
+type_date: "Date"
 type_double: "Double"
 
 subs: sub_cond_decl subroutine_opts "End" "Sub"
@@ -150,11 +151,12 @@ e_tbl_mgmt_desc: IDENTIFIER "." "Description" "=" STRING_LITERAL
 e_tbl_mgmt_eqn: IDENTIFIER "." "Equation" "=" STRING_LITERAL
 e_tbl_mgmt_len: IDENTIFIER "." "Length" "=" INT
 e_tbl_mgmt_type: IDENTIFIER "." "Type" "=" s_tbl_mgmt_types
-s_tbl_mgmt_types: WI_CHAR_FIELD | WI_TIME_FIELD | WI_DATE_FIELD | WI_VIRT_CHAR
+s_tbl_mgmt_types: WI_CHAR_FIELD | WI_TIME_FIELD | WI_DATE_FIELD | WI_VIRT_CHAR | WI_VIRT_DATE
 WI_CHAR_FIELD: "WI_CHAR_FIELD"
 WI_TIME_FIELD: "WI_TIME_FIELD"
 WI_DATE_FIELD: "WI_DATE_FIELD"
 WI_VIRT_CHAR: "WI_VIRT_CHAR"
+WI_VIRT_DATE: "WI_VIRT_DATE"
 
 d_add_col: "AppendField" IDENTIFIER
 d_rename_col: "ReplaceField" STRING_LITERAL "," IDENTIFIER

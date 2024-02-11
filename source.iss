@@ -1,23 +1,19 @@
-Function Add_Account_Info_to_Transaction
-If haveRecords("General Acct Master Lite.IMD")  And haveRecords("General Acct2 Master Lite.IMD")Then
-	Set db = Client.OpenDatabase("General Acct Master Lite.IMD")
-	Set task = db.Extraction
-		task.AddFieldToInc "FORACID"
-		task.AddFieldToInc "ACID"
-		task.AddFieldToInc "ACCT_NAME"
-		task.AddFieldToInc "CUST_NAME"
-		task.AddFieldToInc "CUST_PERM_ADDR1"
-		task.AddFieldToInc "CUST_PERM_ADDR2"
-		task.AddFieldToInc "SCHM_DESC"
-		task.AddFieldToInc "CUSTOMER_TYPE"
-		dbName = "GAM Extract.IMD"
-		task.AddExtraction dbName, "", ""
-		task.CreateVirtualDatabase = False
-		task.PerformTask 1, db.Count
+
+
+Function ASummHist_Average
+If haveRecords("Tran_Hist_Average.IMD") Then
+	Set db = Client.OpenDatabase("Tran_Hist_Average.IMD")
+	Set task = db.Summarization
+	task.AddFieldToSummarize "UTCID"
+	task.AddFieldToSummarize "TRANSACTION_TYPE"
+	task.AddFieldToTotal "TRANSACTION_AMOUNT"
+	task.Criteria = ""
+	dbName = "Summ_Hist_Average.IMD"
+	task.OutputDBName = dbName
+	task.CreatePercentField = FALSE
+	task.StatisticsToInclude = SM_SUM
+	task.PerformTask
 	Set task = Nothing
 	Set db = Nothing
-Else
-	Call logfile("General Acct Master Lite.IMD", "Add_Account_Info_to_Transaction", "Direct Extraction", "Error", "Databases empty or does not exist.")		
 End If
 End Function
-
