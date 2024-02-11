@@ -87,6 +87,12 @@ class RDMTranslator(Translator):
         print(summ_dict)
         print(agg_func)
         
+    def join(self, join_dict):
+        print(join_dict)
+
+    def extract(self, extract_dict):
+        print(extract_dict)
+        
 class Indenter():
     def __init__(self):
         self.indent_level = 0
