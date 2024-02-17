@@ -40,8 +40,20 @@ class NewTransformer(Transformer):
 
         self.dup_key_exclude_task_opts = {}
 
+        self.dup_key_detect_task_opts = {}
+        self.dup_key_add_fields = []
+
         self.sort_task_opts = {}
         self.sort_add_keys = []
+
+        self.index_task_opts = {}
+
+        self.top_recs_extract_opts = {}
+        self.top_recs_keys = []
+        self.top_recs_fields = []
+
+        self.append_db_task_opts = {}
+        self.append_db_add_dbs = []
 
         Token.__repr__ = lambda self: self.value
 
@@ -443,6 +455,41 @@ class NewTransformer(Transformer):
     def e_dup_key_exclude_db_name(self, token):
         self.dup_key_exclude_task_opts.update({"db_name": token})
 
+    """ Duplicate Key Detection Rules """
+    def d_dup_key_detect(self, *_):
+        self.translator.dup_key_detect(self.dup_key_detect_task_opts)
+    
+    def e_dup_key_detect_opt(self, token):
+        return token
+    
+    def e_dup_key_detect_task_opts(self, token):
+        return token
+    
+    def s_dup_key_detect_task_opts(self, token):
+        self.dup_key_detect_task_opts.update(token)
+
+    def e_dup_key_detect_add_fields_to_inc(self, *_):
+        return {"fields": self.dup_key_add_fields}
+    
+    def e_dup_key_detect_add_field_to_inc(self, token):
+        self.dup_key_add_fields.append(token)
+
+    def e_dup_key_detect_add_key(self, *tokens):
+        return {"key": (tokens[0], tokens[1])}
+    
+    def e_dup_key_detect_output_duplicates(self, token):
+        return {"output_duplicates": token}
+    
+    def e_dup_key_detect_create_virt_database(self, token):
+        return {"create_virt_db": token}
+    
+    def e_dup_key_detect_perf_task(self, *_):
+        return {"perf_task": ""}
+    
+    def e_dup_key_detect_db_name(self, token):
+        self.dup_key_detect_task_opts.update({"db_name": token})
+
+
     """ Sort Rules """
     def d_sort(self, *_):
         self.translator.sort(self.sort_task_opts)
@@ -467,6 +514,92 @@ class NewTransformer(Transformer):
     
     def e_sort_db_name(self, token):
         self.sort_task_opts.update({"db_name": token})
+
+    """ Index Rules """
+    def d_index(self, *_):
+        self.translator.index(self.index_task_opts)
+
+    def e_index_opt(self, token):
+        return token
+
+    def s_index_task_opts(self, token):
+        self.index_task_opts.update(token)
+
+    def e_index_add_key(self, *tokens):
+        return {"key": (tokens[0], tokens[1])}
+    
+    def e_index_index(self, token):
+        return {"index": token}
+    
+    """ Top Records Extraction Rules """
+    def d_top_recs_extract(self, *_):
+        self.translator.top_recs_extract(self.top_recs_extract_opts)
+
+    def e_top_recs_extract_opt(self, token):
+        return token
+    
+    def e_top_recs_extract_task_opts(self, token):
+        return token
+    
+    def s_top_recs_extract_task_opts(self, token):
+        self.top_recs_extract_opts.update(token)
+
+    def e_top_recs_extract_add_fields_to_inc(self, *_):
+
+        return {"fields": self.top_recs_fields}
+    
+    def e_top_recs_extract_add_field_to_inc(self, token):
+        self.top_recs_fields.append(token)
+    
+    def e_top_recs_extract_add_keys(self, *_):
+        return {"keys": self.top_recs_keys}
+    
+    def e_top_recs_extract_add_key(self, *tokens):
+        self.top_recs_keys.append((tokens[0], tokens[1]))
+
+    def e_top_recs_extract_output_file(self, token):
+        return {"output_file": token}
+    
+    def e_top_recs_extract_recs_to_extract(self, token):
+        return {"no_of_recs": token}
+    
+    def e_top_recs_extract_create_virt_db(self, token):
+        return {"virt_db": token}
+
+    def e_top_recs_extract_perf_task(self, *_):
+        return {"perf_task": ""}
+    
+    def e_top_recs_extract_db_name(self, token):
+        self.top_recs_extract_opts.update({"db_name": token})
+
+    def e_inner_client_open_db(self, *_):
+        return {"client": ""}
+    
+    """ Append Database Rules """
+    def d_append_db(self, *_):
+        self.translator.append_db(self.append_db_task_opts)
+
+    def e_append_db_opt(self, token):
+        return token
+    
+    def e_append_db_task_opts(self, token):
+        return token
+    
+    def s_append_db_task_opts(self, token):
+        self.append_db_task_opts.update(token)
+
+    def e_append_db_add_databases(self, *_):
+        return {"dbs": self.append_db_add_dbs}
+    
+    def e_append_db_add_database(self, token):
+        self.append_db_add_dbs.append(token)
+
+    def e_append_db_perf_task(self, *_):
+        return {"perf_task": ""}
+
+    def e_append_db_db_name(self, token):
+        self.append_db_task_opts.update({"db_name": token})
+
 
 
     # def std_fns_decl(self, *tokens):

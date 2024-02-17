@@ -47,6 +47,8 @@ st_nts: st_nts st_nt | st_nt
 st_nt: "Set" st_opts "=" "Nothing"
 st_opts: "field" | "task" | "db"
 
+e_inner_client_open_db: "Client" "." "OpenDatabase" "(" (IDENTIFIER | STRING_LITERAL) ")" 
+
 i_fns: bp_std_fns | std_fns | d_cleanup | COMMENT
 
 bp_std_fns: have_records_check_decl std_fns_decl  have_records_check_else? have_records_check_tnl have_records_check_else?
@@ -68,7 +70,7 @@ st_fn: "Set" "task" "=" "db" "." std_fns_opts
 
 std_fns: std_fns_decl
 
-std_fns_opts: (d_summarize | d_join | d_extract | d_export | d_tbl_manage | d_visual_connect | d_dup_key_exclude | d_sort) st_nts?
+std_fns_opts: (d_summarize | d_join | d_extract | d_export | d_tbl_manage | d_visual_connect | d_dup_key_exclude | d_dup_key_detect | d_sort | d_index | d_top_recs_extract | d_append_db) st_nts?
 
 d_summarize: "Summarization" e_summarize_opts
 e_summarize_opts: e_summarize_opts e_summarize_opt | e_summarize_opt
@@ -214,6 +216,19 @@ e_dup_key_create_virt_database: "CreateVirtualDatabase" "=" s_bools
 e_dup_key_perf_task: "PerformTask" "dbName" "," STRING_LITERAL
 e_dup_key_exclude_db_name: "dbName" "=" STRING_LITERAL
 
+d_dup_key_detect: "DupKeyDetection" e_dup_key_detect_opts
+e_dup_key_detect_opts: e_dup_key_detect_opts e_dup_key_detect_opt | e_dup_key_detect_opt
+e_dup_key_detect_opt: e_dup_key_detect_task_opts | e_dup_key_detect_db_name
+e_dup_key_detect_task_opts: "task" "." s_dup_key_detect_task_opts
+s_dup_key_detect_task_opts: e_dup_key_detect_add_fields_to_inc | e_dup_key_detect_add_key | e_dup_key_detect_output_duplicates | e_dup_key_detect_create_virt_database | e_dup_key_detect_perf_task
+e_dup_key_detect_add_fields_to_inc: e_dup_key_detect_add_fields_to_inc e_dup_key_detect_add_field_to_inc | e_dup_key_detect_add_field_to_inc
+e_dup_key_detect_add_field_to_inc: "AddFieldToInc" STRING_LITERAL
+e_dup_key_detect_add_key: "AddKey" STRING_LITERAL "," STRING_LITERAL
+e_dup_key_detect_output_duplicates: "OutputDuplicates" "=" s_bools
+e_dup_key_detect_create_virt_database: "CreateVirtualDatabase" "=" s_bools
+e_dup_key_detect_perf_task: "PerformTask" "dbName" "," STRING_LITERAL
+e_dup_key_detect_db_name: "dbName" "=" STRING_LITERAL
+
 d_sort: "Sort" e_sort_opts
 e_sort_opts: e_sort_opts e_sort_opt | e_sort_opt
 e_sort_opt: e_sort_task_opts | e_sort_db_name
@@ -223,3 +238,35 @@ e_sort_add_keys: e_sort_add_keys e_sort_add_key | e_sort_add_key
 e_sort_add_key: "AddKey" STRING_LITERAL "," STRING_LITERAL
 e_sort_perf_task: "PerformTask" "dbName"
 e_sort_db_name: "dbName" "=" STRING_LITERAL
+
+d_index: "Index" e_index_opts
+e_index_opts: e_index_opts e_index_opt | e_index_opt
+e_index_opt: "task" "." s_index_task_opts
+s_index_task_opts: e_index_add_key | e_index_index
+e_index_add_key: "AddKey" STRING_LITERAL "," STRING_LITERAL
+e_index_index: "Index" s_bools
+
+d_top_recs_extract: "TopRecordsExtraction" e_top_recs_extract_opts
+e_top_recs_extract_opts: e_top_recs_extract_opts e_top_recs_extract_opt | e_top_recs_extract_opt
+e_top_recs_extract_opt: e_top_recs_extract_task_opts | e_top_recs_extract_db_name | e_inner_client_open_db | st_nts
+e_top_recs_extract_task_opts: "task" "." s_top_recs_extract_task_opts
+s_top_recs_extract_task_opts: e_top_recs_extract_add_fields_to_inc | e_top_recs_extract_add_keys | e_top_recs_extract_output_file | e_top_recs_extract_recs_to_extract | e_top_recs_extract_create_virt_db | e_top_recs_extract_perf_task
+e_top_recs_extract_add_fields_to_inc: e_top_recs_extract_add_fields_to_inc e_top_recs_extract_add_field_to_inc | e_top_recs_extract_add_field_to_inc
+e_top_recs_extract_add_field_to_inc: "AddFieldToInc" STRING_LITERAL
+e_top_recs_extract_add_keys: e_top_recs_extract_add_keys e_top_recs_extract_add_key | e_top_recs_extract_add_key
+e_top_recs_extract_add_key: "AddKey" STRING_LITERAL "," STRING_LITERAL
+e_top_recs_extract_output_file: "OutputFileName" "=" (IDENTIFIER | STRING_LITERAL)
+e_top_recs_extract_recs_to_extract: "NumberOfRecordsToExtract" "=" INT
+e_top_recs_extract_create_virt_db: "CreateVirtualDatabase" "=" s_bools
+e_top_recs_extract_perf_task: "PerformTask"
+e_top_recs_extract_db_name: "dbName" "=" STRING_LITERAL
+
+d_append_db: "AppendDatabase" e_append_db_opts
+e_append_db_opts: e_append_db_opts e_append_db_opt | e_append_db_opt
+e_append_db_opt: e_append_db_task_opts | e_append_db_db_name
+e_append_db_task_opts: "task" "." s_append_db_task_opts
+s_append_db_task_opts: e_append_db_add_databases | e_append_db_perf_task
+e_append_db_add_databases: e_append_db_add_databases e_append_db_add_database | e_append_db_add_database
+e_append_db_add_database: "AddDatabase" STRING_LITERAL
+e_append_db_perf_task: "PerformTask" "dbName" "," STRING_LITERAL
+e_append_db_db_name: "dbName" "=" STRING_LITERAL

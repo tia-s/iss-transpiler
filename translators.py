@@ -117,7 +117,6 @@ class RDMTranslator(Translator):
         print(table_manage_dict)
         self.indenter.write_to_file(f'table: {table_manage_dict}')
 
-
     def connect(self, visual_connect_dict):
         self.indenter.write_to_file(f'visual connect: {visual_connect_dict}')
         print(visual_connect_dict)
@@ -126,9 +125,25 @@ class RDMTranslator(Translator):
         self.indenter.write_to_file(f'exclude: {exclude_dict}')
         print(exclude_dict)
 
+    def dup_key_detect(self, detect_dict):
+        self.indenter.write_to_file(f'exclude: {detect_dict}')
+        print(detect_dict)
+
     def sort(self, sort_dict):
         self.indenter.write_to_file(f"sort: {sort_dict}")
         print(sort_dict)
+
+    def index(self, index_dict):
+        self.indenter.write_to_file(f"index: {index_dict}")
+        print(index_dict)
+
+    def top_recs_extract(self, top_recs_dict):
+        self.indenter.write_to_file(f"top recs: {top_recs_dict}")
+        print(top_recs_dict)
+
+    def append_db(self, append_dict):
+        self.indenter.write_to_file(f"append: {append_dict}")
+        print(append_dict)
 
 class Indenter():
     def __init__(self):
