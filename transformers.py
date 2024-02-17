@@ -31,6 +31,7 @@ class NewTransformer(Transformer):
         self.cleanup_delete_files = []
 
         self.table_manage_task_opts = {}
+        self.table_manage_dicts = []
 
         self.visual_connect_task_opts = {}
         self.visual_connect_add_fields_to_include = []
@@ -306,9 +307,6 @@ class NewTransformer(Transformer):
         self.cleanup_delete_files.append(id)
 
     """ Table Management Rules """
-    def d_tbl_manage(self, *_):
-        self.translator.table_manage(self.table_manage_task_opts)
-
     def e_tbl_mgmt_opt(self, token):
         return token
     
@@ -321,9 +319,6 @@ class NewTransformer(Transformer):
     def s_tbl_mgmt_field_opts(self, token):
         self.table_manage_task_opts.update(token)
     
-    def s_tbl_mgmt_task_opts(self, token):
-        self.table_manage_task_opts.update(token)
-
     def e_tbl_mgmt_name(self, token):
         return {"name": token}
     
@@ -337,7 +332,7 @@ class NewTransformer(Transformer):
         return token
         
     def e_tbl_mgmt_type(self, token):
-        return {"type": token}
+        return {"field_type": token}
     
     def e_tbl_mgmt_decimals(self, token):
         return {"decimals": token}
@@ -346,18 +341,22 @@ class NewTransformer(Transformer):
         return {"equation": token}
     
     def e_tbl_mgmt_append_field(self, *_):
-        return {"type": "apppend field"}
+        self.translator.table_manage(self.table_manage_task_opts)
+        self.table_manage_task_opts = {}
+    
     
     def e_tbl_mgmt_replace_field(self, token):
-        return {"type": f"replace field ({token})"}
+        self.table_manage_task_opts.update({"replace": token})
+        self.translator.table_manage(self.table_manage_task_opts)
+        self.table_manage_task_opts = {}
 
-    def e_tbl_mgmt_perform_task(self, *_):
-        return {"perform_task": ""}
     
+    # def WI_VIRT_CHAR(self, _):
+    #     return "WI_VIRT_CHAR"
 
     """ Visual Connect Rules """
     def d_visual_connect(self, *_):
-        self.translator.visual_connect(self.visual_connect_task_opts)
+        self.translator.connect(self.visual_connect_task_opts)
 
     def e_visual_connect_opt(self, token):
         return token

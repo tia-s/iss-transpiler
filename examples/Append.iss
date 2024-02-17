@@ -81,3 +81,55 @@ Function Get_Final_Cheque_File
 	End If
 
 End Function
+
+---
+
+
+
+'Total wires in by other party and party.
+Function SummarizeInWireOthPrty
+If haveRecords("Inward Wire Cust Acct Branch.IMD") Then
+	Set db = Client.OpenDatabase("Inward Wire Cust Acct Branch.IMD")
+	Set task = db.TableManagement
+	Set field = db.TableDef.NewField
+		field.Name = "USD"
+		field.Description = ""
+		field.Type = WI_VIRT_CHAR
+		field.Equation = """USD"""
+		field.Length = 3
+	If FieldExist(db.name, field.name) Then Call Delete_Virtual_Field(db.name, field.name)
+		task.AppendField field
+		
+	Set field = db.TableDef.NewField
+		field.Name = "RUN_DATE"
+		field.Description = ""
+		field.Type = WI_VIRT_CHAR
+		field.Equation = "@Dtoc(@Date(),""YYYY-MM-DD"")"
+		field.Length = 10
+	If FieldExist(db.name, field.name) Then Call Delete_Virtual_Field(db.name, field.name)
+	task.AppendField field
+	
+	task.PerformTask
+	Set field = Nothing	
+	Set task = Nothing
+	Set db = Nothing
+End If 	
+
+---
+
+' File - Export Database: MDB2000
+Function ExportSummaryandDetail
+
+If haveRecords("WT6_Summ.IMD") Then
+	Set db = Client.OpenDatabase("WT6_Summ.IMD")
+	Set task = db.ExportDatabase
+	 task.IncludeAllFields
+	eqn = ""
+	task.PerformTask "Reports\WT6_Multiple Wire Draft Multiple Branch Summary.MDB", "MultiWireDrftMultiBranchSumm", "MDB2000", 1, db.Count, eqn
+RESULTSLOG(db.name)
+		Set task = Nothing
+	Set db = Nothing
+	
+Else 
+NORESULTSLOG("WT6_SUMMARY.IMD") 
+End If

@@ -68,7 +68,7 @@ st_fn: "Set" "task" "=" "db" "." std_fns_opts
 
 std_fns: std_fns_decl
 
-std_fns_opts: (d_summarize | d_join | d_extract | d_export | d_tbl_manages | d_visual_connect | d_dup_key_exclude | d_sort) st_nts?
+std_fns_opts: (d_summarize | d_join | d_extract | d_export | d_tbl_manage | d_visual_connect | d_dup_key_exclude | d_sort) st_nts?
 
 d_summarize: "Summarization" e_summarize_opts
 e_summarize_opts: e_summarize_opts e_summarize_opt | e_summarize_opt
@@ -148,7 +148,6 @@ e_cleanup_task_opt: e_cleanup_delete_files
 e_cleanup_delete_files: e_cleanup_delete_files e_cleanup_delete_file | e_cleanup_delete_file
 e_cleanup_delete_file: "DeleteFile" "(" STRING_LITERAL ")"
 
-d_tbl_manages: d_tbl_manages d_tbl_manage | d_tbl_manage
 d_tbl_manage: "TableManagement" e_tbl_mgmt_opts
 e_tbl_mgmt_opts: e_tbl_mgmt_opts e_tbl_mgmt_opt | e_tbl_mgmt_opt
 e_tbl_mgmt_opt: e_tbl_mgmt_task_opts | e_tbl_mgmt_st_opts | e_tbl_mgmt_field_opts | COMMENT

@@ -30,7 +30,7 @@ Set db = Client.OpenDatabase("TM12_SUMM.IMD")
 	field.Decimals = 2
 	task.ReplaceField "TRANSACTION_AMOUNT_SUM_SUM", field
 	task.PerformTask
-	
+
 	Set task  = db.TableManagement
 	Set field = db.TableDef.NewField
 	field.Name = "STAFF"
@@ -40,7 +40,6 @@ Set db = Client.OpenDatabase("TM12_SUMM.IMD")
 	field.Length = 50
 	task.AppendField field
 	task.PerformTask
-
 	Set task = Nothing
 	Set db = Nothing
 	Set field = Nothing

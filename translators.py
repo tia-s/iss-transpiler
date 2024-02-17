@@ -109,14 +109,16 @@ class RDMTranslator(Translator):
         print(cleanup_dict)
 
     def table_manage(self, table_manage_dict):
-        type = table_manage_dict['type']
-        if type == 'append field':
-            self.indenter.write_to_file(f'wd.addCol("{type}")')
-        else:
-            self.indenter.write_to_file(f'wd.renameCol("{type}")')
+        # type = table_manage_dict['type']
+        # if type == 'append field':
+        #     self.indenter.write_to_file(f'wd.addCol("{type}")')
+        # else:
+        #     self.indenter.write_to_file(f'wd.renameCol("{type}")')
         print(table_manage_dict)
+        self.indenter.write_to_file(f'table: {table_manage_dict}')
 
-    def visual_connect(self, visual_connect_dict):
+
+    def connect(self, visual_connect_dict):
         self.indenter.write_to_file(f'visual connect: {visual_connect_dict}')
         print(visual_connect_dict)
 
@@ -127,7 +129,7 @@ class RDMTranslator(Translator):
     def sort(self, sort_dict):
         self.indenter.write_to_file(f"sort: {sort_dict}")
         print(sort_dict)
-        
+
 class Indenter():
     def __init__(self):
         self.indent_level = 0
