@@ -37,6 +37,8 @@ class NewTransformer(Transformer):
         self.visual_connect_add_assgn = []
         self.visual_connect_add_relations = []
 
+        self.dup_key_exclude_task_opts = {}
+
         Token.__repr__ = lambda self: self.value
 
     def _reset(self):
@@ -407,6 +409,37 @@ class NewTransformer(Transformer):
 
     def e_visual_connect_add_assgn(self, *tokens):
         self.visual_connect_add_assgn.append((tokens[0], tokens[1]))
+
+
+    def d_dup_key_exclude(self, *_):
+        self.translator.dup_key_exclude(self.dup_key_exclude_task_opts)
+
+    def e_dup_key_exclude_opt(self, token):
+        return token
+    
+    def e_dup_key_exclude_task_opts(self, token):
+        return token
+    
+    def s_dup_key_exclude_task_opts(self, token):
+        self.dup_key_exclude_task_opts.update(token)
+
+    def e_dup_key_include_all_fields(self, *_):
+        return {"fields": "all"}
+    
+    def e_dup_key_add_key(self, *tokens):
+        return {"key": tokens[0]}
+    
+    def e_dup_key_different_field(self, token):
+        return {"diff_field": token}
+    
+    def e_dup_key_create_virt_database(self, token):
+        return {"virt_db": token}
+    
+    def e_dup_key_perf_task(self, *_):
+        return {"perf_task": ""}
+    
+    def e_dup_key_exclude_db_name(self, token):
+        self.dup_key_exclude_task_opts.update({"db_name": token})
 
     # def std_fns_decl(self, *tokens):
     #     return {"open_db": tokens[0], "fn": tokens[1]}

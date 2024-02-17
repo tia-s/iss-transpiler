@@ -47,7 +47,7 @@ st_nts: st_nts st_nt | st_nt
 st_nt: "Set" st_opts "=" "Nothing"
 st_opts: "field" | "task" | "db"
 
-i_fns: bp_std_fns | std_fns | d_cleanup
+i_fns: bp_std_fns | std_fns | d_cleanup | COMMENT
 
 bp_std_fns: have_records_check_decl std_fns_decl have_records_check_tnl have_records_check_else?
 have_records_check_decl: IF have_records_opts THEN
@@ -64,7 +64,7 @@ st_fn: "Set" "task" "=" "db" "." std_fns_opts
 
 std_fns: std_fns_decl
 
-std_fns_opts: (d_summarize | d_join | d_extract | d_export | d_tbl_manage | d_visual_connect) st_nts?
+std_fns_opts: (d_summarize | d_join | d_extract | d_export | d_tbl_manage | d_visual_connect | d_dup_key_exclude) st_nts?
 
 d_summarize: "Summarization" e_summarize_opts
 e_summarize_opts: e_summarize_opts e_summarize_opt | e_summarize_opt
@@ -191,3 +191,15 @@ e_visual_connect_perf_task: "PerformTask"
 e_visual_connect_db_name: "dbName" "=" STRING_LITERAL
 e_visual_connect_add_assgns: e_visual_connect_add_assgns e_visual_connect_add_assgn | e_visual_connect_add_assgn
 e_visual_connect_add_assgn: IDENTIFIER "=" e_visual_connect_task_opts
+
+d_dup_key_exclude: "DupKeyExclusion" e_dup_key_exclude_opts
+e_dup_key_exclude_opts: e_dup_key_exclude_opts e_dup_key_exclude_opt | e_dup_key_exclude_opt
+e_dup_key_exclude_opt: e_dup_key_exclude_task_opts | e_dup_key_exclude_db_name
+e_dup_key_exclude_task_opts: "task" "." s_dup_key_exclude_task_opts
+s_dup_key_exclude_task_opts: e_dup_key_include_all_fields | e_dup_key_add_key | e_dup_key_different_field | e_dup_key_create_virt_database | e_dup_key_perf_task
+e_dup_key_include_all_fields: "IncludeAllFields"
+e_dup_key_add_key: "AddKey" STRING_LITERAL "," STRING_LITERAL
+e_dup_key_different_field: "DifferentField" "=" STRING_LITERAL
+e_dup_key_create_virt_database: "CreateVirtualDatabase" "=" s_bools
+e_dup_key_perf_task: "PerformTask" "dbName" "," STRING_LITERAL
+e_dup_key_exclude_db_name: "dbName" "=" STRING_LITERAL

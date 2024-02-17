@@ -120,6 +120,10 @@ class RDMTranslator(Translator):
         self.indenter.write_to_file(f'visual connect: {visual_connect_dict}')
         print(visual_connect_dict)
 
+    def dup_key_exclude(self, exclude_dict):
+        self.indenter.write_to_file(f'exclude: {exclude_dict}')
+        print(exclude_dict)
+        
 class Indenter():
     def __init__(self):
         self.indent_level = 0
