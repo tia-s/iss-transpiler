@@ -68,6 +68,9 @@ std_fns_decl: st_open_db st_fn
 st_open_db: "Set" "db" "=" "Client" "." "OpenDatabase" "(" STRING_LITERAL ")"
 st_fn: "Set" "task" "=" "db" "." std_fns_opts
 
+s_field_wi_types: WI_BOOL
+WI_BOOL: "WI_BOOL"
+
 std_fns: std_fns_decl
 
 std_fns_opts: (d_summarize | d_join | d_extract | d_export | d_tbl_manage | d_visual_connect | d_dup_key_exclude | d_dup_key_detect | d_sort | d_index | d_top_recs_extract | d_append_db) st_nts?
@@ -129,17 +132,19 @@ e_join_db_name: "dbName" "=" STRING_LITERAL
 
 d_extract: "Extraction" e_extract_opts
 e_extract_opts: e_extract_opts e_extract_opt | e_extract_opt
-e_extract_opt: e_extract_task_opts | e_extract_db_name | COMMENT
+e_extract_opt: e_extract_task_opts | e_extract_db_name | COMMENT | e_inner_client_open_db | st_nts
 e_extract_task_opts: "task" "." s_extract_task_opts
-s_extract_task_opts: e_extract_include_all_fields | e_extract_add_fields_to_inc | e_add_extraction | e_extract_create_virt_database | e_extract_perform_task
+s_extract_task_opts: e_extract_include_all_fields | e_extract_add_fields_to_inc | e_add_fields | e_add_extraction | e_extract_create_virt_database | e_extract_perform_task
 e_extract_include_all_fields: "IncludeAllFields"
 e_extract_add_fields_to_inc: e_extract_add_fields_to_inc e_extract_add_field_to_inc | e_extract_add_field_to_inc
 e_extract_add_field_to_inc: "AddFieldToInc" STRING_LITERAL
-e_add_extraction: "AddExtraction" "dbName" "," STRING_LITERAL "," s_extract_filter_opts
+e_add_fields: e_add_fields e_add_field | e_add_field
+e_add_field: "AddField" STRING_LITERAL "," STRING_LITERAL "," s_field_wi_types "," INT "," INT "," STRING_LITERAL
+e_add_extraction: "AddExtraction" ("dbName" | STRING_LITERAL) "," STRING_LITERAL "," s_extract_filter_opts
 s_extract_filter_opts: s_extract_filter_opts s_extract_filter_opt | s_extract_filter_opt
 s_extract_filter_opt: STRING_LITERAL | "&" | IDENTIFIER
 e_extract_create_virt_database: "CreateVirtualDatabase" "=" s_bools
-e_extract_perform_task: "PerformTask" INT "," "db" "." "Count"
+e_extract_perform_task: "PerformTask" INT "," ("db" "." "Count" | INT)
 e_extract_db_name: "dbName" "=" STRING_LITERAL
 
 d_export: "ExportDatabase" e_export_opts

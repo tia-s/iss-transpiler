@@ -1,14 +1,15 @@
-' File: Join Databases
-Function JoinDatabase
-	Set db = Client.OpenDatabase("Join Databases1.IMD")
-	Set task = db.JoinDatabase
-	task.FileToJoin "PUB.mb.IMD"
-	task.IncludeAllPFields
-	task.IncludeAllSFields
-	task.AddMatchKey "GROUP_ID_AVERAGE", "CU", "A"
+' Data: Direct Extraction
+Function DirectExtraction
+	Set db = Client.OpenDatabase("Append Databases.IMD")
+	Set task = db.Extraction
+	task.AddFieldToInc "VVA_INT1"
+	task.AddFieldToInc "TAX_EXEMPT_AMT"
+	task.AddField "TEST", "", WI_BOOL, 1, 0, "0"
+	dbName = "EXTRACTION7.IMD"
+	task.AddExtraction dbName, "", ""
 	task.CreateVirtualDatabase = False
-	dbName = "Join Databases2.IMD"
-	task.PerformTask dbName, "", WI_JOIN_NOC_PRI_MATCH
+	task.AddExtraction "EXTRACTION8.IMD", "", ""
+	task.PerformTask 1, 2
 	Set task = Nothing
 	Set db = Nothing
 	Client.OpenDatabase (dbName)

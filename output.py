@@ -1,8 +1,8 @@
 from DataAnalytics import DataAnalytics
 wd = DataAnalytics()
 
-# File: Join Databases
+# Data: Direct Extraction
 
-def JoinDatabase():
-	join: {'file_to_join': 'PUB.mb.IMD', 'p_fields': 'all', 's_fields': 'all', 'match_keys': ['GROUP_ID_AVERAGE', 'CU', 'A'], 'create_virtual_db': False, 'db_name': 'Join Databases2.IMD', 'perform_task': 'WI_JOIN_NOC_PRI_MATCH'}
+def DirectExtraction():
+	extract: {'fields': ['VVA_INT1', 'TAX_EXEMPT_AMT'], 'created_fields': [('TEST', '', 'WI_BOOL', 1, 0, '0')], 'db_name': 'EXTRACTION7.IMD', 'filter': '', 'create_virtual_database': False, 'perform_task': ''}
 	

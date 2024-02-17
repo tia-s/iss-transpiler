@@ -23,6 +23,7 @@ class NewTransformer(Transformer):
 
         self.extract_task_opts = {}
         self.extract_add_fields_to_inc = []
+        self.extract_add_fields = []
 
         self.export_task_opts = {}
         self.export_add_fields_to_inc = []
@@ -79,6 +80,12 @@ class NewTransformer(Transformer):
     
     def e_top_recs_extract_db_name(self, token):
         self.top_recs_extract_opts.update({"db_name": token})
+
+    def s_field_wi_types(self, token):
+        return token
+    
+    def WI_BOOL(self, *_):
+        return "WI_BOOL"
     
     """ Struct Rules """
     def struct_cond_decl(self, _, id):
@@ -295,6 +302,12 @@ class NewTransformer(Transformer):
     
     def e_extract_add_field_to_inc(self, token):
         self.extract_add_fields_to_inc.append(token)
+
+    def e_add_fields(self, *_):
+        return {"created_fields": self.extract_add_fields}
+    
+    def e_add_field(self, *tokens):
+        self.extract_add_fields.append(tokens)
 
     def e_add_extraction(self, *tokens):
         return {"filter": ""}
