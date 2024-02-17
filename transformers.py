@@ -39,6 +39,9 @@ class NewTransformer(Transformer):
 
         self.dup_key_exclude_task_opts = {}
 
+        self.sort_task_opts = {}
+        self.sort_add_keys = []
+
         Token.__repr__ = lambda self: self.value
 
     def _reset(self):
@@ -410,7 +413,7 @@ class NewTransformer(Transformer):
     def e_visual_connect_add_assgn(self, *tokens):
         self.visual_connect_add_assgn.append((tokens[0], tokens[1]))
 
-
+    """ Duplicate Key Exclusion Rules """
     def d_dup_key_exclude(self, *_):
         self.translator.dup_key_exclude(self.dup_key_exclude_task_opts)
 
@@ -440,6 +443,32 @@ class NewTransformer(Transformer):
     
     def e_dup_key_exclude_db_name(self, token):
         self.dup_key_exclude_task_opts.update({"db_name": token})
+
+    """ Sort Rules """
+    def d_sort(self, *_):
+        self.translator.sort(self.sort_task_opts)
+
+    def e_sort_opt(self, token):
+        return token
+    
+    def e_sort_task_opts(self, token):
+        return token
+    
+    def s_sort_task_opts(self, token):
+        self.sort_task_opts.update(token)
+
+    def e_sort_add_keys(self, *_):
+        return {"keys": self.sort_add_keys}
+    
+    def e_sort_add_key(self, *tokens):
+        self.sort_add_keys.append((tokens[0], tokens[1]))
+
+    def e_sort_perf_task(self, *_):
+        return {"perf_task": ""}
+    
+    def e_sort_db_name(self, token):
+        self.sort_task_opts.update({"db_name": token})
+
 
     # def std_fns_decl(self, *tokens):
     #     return {"open_db": tokens[0], "fn": tokens[1]}

@@ -123,6 +123,10 @@ class RDMTranslator(Translator):
     def dup_key_exclude(self, exclude_dict):
         self.indenter.write_to_file(f'exclude: {exclude_dict}')
         print(exclude_dict)
+
+    def sort(self, sort_dict):
+        self.indenter.write_to_file(f"sort: {sort_dict}")
+        print(sort_dict)
         
 class Indenter():
     def __init__(self):

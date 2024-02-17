@@ -36,9 +36,13 @@ Set db = Client.OpenDatabase("TM12_SUMM.IMD")
 	field.Name = "STAFF"
 	field.Description = ""
 	field.Type = WI_VIRT_CHAR
-	field.Equation = "@if(@Alltrim(STAFFIND) == ""Y"" , ""Yes"", ""No"")"
+	field.Equation = ""
 	field.Length = 50
 	task.AppendField field
 	task.PerformTask
+
+	Set task = Nothing
+	Set db = Nothing
+	Set field = Nothing
 End If
 End Function

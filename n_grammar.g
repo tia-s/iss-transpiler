@@ -49,14 +49,18 @@ st_opts: "field" | "task" | "db"
 
 i_fns: bp_std_fns | std_fns | d_cleanup | COMMENT
 
-bp_std_fns: have_records_check_decl std_fns_decl have_records_check_tnl have_records_check_else?
+bp_std_fns: have_records_check_decl std_fns_decl  have_records_check_else? have_records_check_tnl have_records_check_else?
 have_records_check_decl: IF have_records_opts THEN
 have_records_opts: have_records_opts have_records_opt | have_records_opt
 have_records_opt: have_records | AND
 have_records: HAVERECORDS "(" STRING_LITERAL ")"
 have_records_check_tnl: END IF
 have_records_check_else: ELSE bp_method_opts
-bp_method_opts: "NORESULTSLOG" "(" STRING_LITERAL ")"
+bp_method_opts: bp_no_results_log | bp_log_file
+bp_no_results_log: "NORESULTSLOG" "(" STRING_LITERAL ")"
+bp_log_file: "Call" "logfile" "(" bp_log_file_opts ")"
+bp_log_file_opts: bp_log_file_opts bp_log_file_opt | bp_log_file_opt
+bp_log_file_opt: STRING_LITERAL | ","
 
 std_fns_decl: st_open_db st_fn
 st_open_db: "Set" "db" "=" "Client" "." "OpenDatabase" "(" STRING_LITERAL ")"
@@ -64,11 +68,11 @@ st_fn: "Set" "task" "=" "db" "." std_fns_opts
 
 std_fns: std_fns_decl
 
-std_fns_opts: (d_summarize | d_join | d_extract | d_export | d_tbl_manage | d_visual_connect | d_dup_key_exclude) st_nts?
+std_fns_opts: (d_summarize | d_join | d_extract | d_export | d_tbl_manages | d_visual_connect | d_dup_key_exclude | d_sort) st_nts?
 
 d_summarize: "Summarization" e_summarize_opts
 e_summarize_opts: e_summarize_opts e_summarize_opt | e_summarize_opt
-e_summarize_opt: e_summarize_task_opts | e_summ_db_name
+e_summarize_opt: e_summarize_task_opts | e_summ_db_name | COMMENT
 e_summarize_task_opts: "task" "." s_summarize_task_opts
 s_summarize_task_opts: e_add_fields_to_summarize | e_add_fields_to_total | e_add_fields_to_inc | e_summ_criteria | e_summ_output_db_name | e_summ_create_percent_field | e_summ_statistics_to_include | e_perform_task 
 e_add_fields_to_summarize: e_add_fields_to_summarize e_add_field_to_summarize | e_add_field_to_summarize
@@ -92,7 +96,7 @@ SM_AVERAGE: "SM_AVERAGE"
 
 d_join: "JoinDatabase" e_join_opts
 e_join_opts: e_join_opts e_join_opt | e_join_opt
-e_join_opt: e_join_task_opts | e_join_db_name
+e_join_opt: e_join_task_opts | e_join_db_name | COMMENT
 e_join_task_opts: "task" "." s_join_task_opts
 s_join_task_opts: e_file_to_join | e_include_all_p_fields | e_include_all_s_fields | e_add_s_fields_to_inc | e_add_p_fields_to_inc | e_add_match_key | e_join_create_virt_database | e_join_perform_task
 e_file_to_join: "FileToJoin" STRING_LITERAL
@@ -113,7 +117,7 @@ e_join_db_name: "dbName" "=" STRING_LITERAL
 
 d_extract: "Extraction" e_extract_opts
 e_extract_opts: e_extract_opts e_extract_opt | e_extract_opt
-e_extract_opt: e_extract_task_opts | e_extract_db_name
+e_extract_opt: e_extract_task_opts | e_extract_db_name | COMMENT
 e_extract_task_opts: "task" "." s_extract_task_opts
 s_extract_task_opts: e_extract_include_all_fields | e_extract_add_fields_to_inc | e_add_extraction | e_extract_create_virt_database | e_extract_perform_task
 e_extract_include_all_fields: "IncludeAllFields"
@@ -144,11 +148,23 @@ e_cleanup_task_opt: e_cleanup_delete_files
 e_cleanup_delete_files: e_cleanup_delete_files e_cleanup_delete_file | e_cleanup_delete_file
 e_cleanup_delete_file: "DeleteFile" "(" STRING_LITERAL ")"
 
-d_tbl_manage: d_tbl_manage d_tbl_manage_ | d_tbl_manage_
-d_tbl_manage_: ("Set" "task" "=" "db" ".")? "TableManagement" e_tbl_mgmt_st_field e_tbl_mgmt_opts
-e_tbl_mgmt_st_field: "Set" "field" "=" "db" "." "TableDef" "." "NewField"
+d_tbl_manages: d_tbl_manages d_tbl_manage | d_tbl_manage
+d_tbl_manage: "TableManagement" e_tbl_mgmt_opts
 e_tbl_mgmt_opts: e_tbl_mgmt_opts e_tbl_mgmt_opt | e_tbl_mgmt_opt
-e_tbl_mgmt_opt: e_tbl_mgmt_field_opts | e_tbl_mgmt_task_opts
+e_tbl_mgmt_opt: e_tbl_mgmt_task_opts | e_tbl_mgmt_st_opts | e_tbl_mgmt_field_opts | COMMENT
+e_tbl_mgmt_task_opts: "task" "." s_tbl_mgmt_task_opts
+s_tbl_mgmt_task_opts: e_tbl_mgmt_append_field | e_tbl_mgmt_replace_field | e_tbl_mgmt_perform_task
+e_tbl_mgmt_append_field: "AppendField" "field"
+e_tbl_mgmt_replace_field: "ReplaceField" STRING_LITERAL "," "field"
+e_tbl_mgmt_perform_task: "PerformTask"
+e_tbl_mgmt_st_opts: "Set" (e_tbl_mgmt_st_task_opts | e_tbl_mgmt_st_field_opts | e_tbl_mgmt_st_db_opts)
+e_tbl_mgmt_st_task_opts: "task" "=" s_tbl_mgmt_st_task_opts
+s_tbl_mgmt_st_task_opts: e_tbl_mgmt_st_task | "Nothing"
+e_tbl_mgmt_st_task: "db" "." "TableManagement" 
+e_tbl_mgmt_st_field_opts: "field" "=" s_tbl_mgmt_st_field_opts
+s_tbl_mgmt_st_field_opts: e_tbl_mgmt_new_field | "Nothing"
+e_tbl_mgmt_new_field: "db" "." "TableDef" "." "NewField"
+e_tbl_mgmt_st_db_opts: "db" "=" "Nothing"
 e_tbl_mgmt_field_opts: "field" "." s_tbl_mgmt_field_opts
 s_tbl_mgmt_field_opts: e_tbl_mgmt_name | e_tbl_mgmt_desc | e_tbl_mgmt_len | e_tbl_mgmt_type | e_tbl_mgmt_eqn | e_tbl_mgmt_decimals
 e_tbl_mgmt_name: "Name" "=" STRING_LITERAL
@@ -164,11 +180,6 @@ WI_DATE_FIELD: "WI_DATE_FIELD"
 WI_VIRT_CHAR: "WI_VIRT_CHAR"
 WI_VIRT_DATE: "WI_VIRT_DATE"
 WI_NUM_FIELD: "WI_NUM_FIELD"
-e_tbl_mgmt_task_opts: "task" "." s_tbl_mgmt_task_opts
-s_tbl_mgmt_task_opts: e_tbl_mgmt_append_field | e_tbl_mgmt_replace_field | e_tbl_mgmt_perform_task
-e_tbl_mgmt_append_field: "AppendField" "field"
-e_tbl_mgmt_replace_field: "ReplaceField" STRING_LITERAL "," "field"
-e_tbl_mgmt_perform_task: "PerformTask"
 
 d_visual_connect: "VisualConnector" e_visual_connect_opts
 e_visual_connect_opts: e_visual_connect_opts e_visual_connect_opt | e_visual_connect_opt
@@ -203,3 +214,13 @@ e_dup_key_different_field: "DifferentField" "=" STRING_LITERAL
 e_dup_key_create_virt_database: "CreateVirtualDatabase" "=" s_bools
 e_dup_key_perf_task: "PerformTask" "dbName" "," STRING_LITERAL
 e_dup_key_exclude_db_name: "dbName" "=" STRING_LITERAL
+
+d_sort: "Sort" e_sort_opts
+e_sort_opts: e_sort_opts e_sort_opt | e_sort_opt
+e_sort_opt: e_sort_task_opts | e_sort_db_name
+e_sort_task_opts: "task" "." s_sort_task_opts
+s_sort_task_opts: e_sort_add_keys | e_sort_perf_task
+e_sort_add_keys: e_sort_add_keys e_sort_add_key | e_sort_add_key
+e_sort_add_key: "AddKey" STRING_LITERAL "," STRING_LITERAL
+e_sort_perf_task: "PerformTask" "dbName"
+e_sort_db_name: "dbName" "=" STRING_LITERAL
