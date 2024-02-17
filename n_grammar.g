@@ -74,15 +74,18 @@ std_fns_opts: (d_summarize | d_join | d_extract | d_export | d_tbl_manage | d_vi
 
 d_summarize: "Summarization" e_summarize_opts
 e_summarize_opts: e_summarize_opts e_summarize_opt | e_summarize_opt
-e_summarize_opt: e_summarize_task_opts | e_summ_db_name | COMMENT
+e_summarize_opt: e_summarize_task_opts | e_summ_db_name | COMMENT | e_inner_client_open_db | st_nts
 e_summarize_task_opts: "task" "." s_summarize_task_opts
-s_summarize_task_opts: e_add_fields_to_summarize | e_add_fields_to_total | e_add_fields_to_inc | e_summ_criteria | e_summ_output_db_name | e_summ_create_percent_field | e_summ_statistics_to_include | e_perform_task 
+s_summarize_task_opts: e_add_fields_to_summarize | e_add_fields_to_total | e_add_fields_to_inc | e_summ_criteria | e_summ_output_db_name | e_summ_create_percent_field | e_summ_statistics_to_include | e_perform_task | e_summ_use_field_from_first_occurrence | e_summ_result_name | e_summ_use_quick_summarization
 e_add_fields_to_summarize: e_add_fields_to_summarize e_add_field_to_summarize | e_add_field_to_summarize
 e_add_field_to_summarize: "AddFieldToSummarize" STRING_LITERAL
 e_add_fields_to_total: e_add_fields_to_total e_add_field_to_total | e_add_field_to_total
 e_add_field_to_total: "AddFieldToTotal" STRING_LITERAL
 e_add_fields_to_inc: e_add_fields_to_inc e_add_field_to_inc | e_add_field_to_inc
 e_add_field_to_inc: "AddFieldToInc" STRING_LITERAL
+e_summ_use_field_from_first_occurrence: "UseFieldFromFirstOccurrence" "=" s_bools
+e_summ_result_name: "ResultName" "=" STRING_LITERAL
+e_summ_use_quick_summarization: "UseQuickSummarization" "=" s_bools
 e_summ_criteria: "Criteria" "=" DOUBLE_QUOTE s_summ_criteria_opts DOUBLE_QUOTE
 s_summ_criteria_opts: s_summ_criteria_opts s_summ_criteria_opt | s_summ_criteria_opt
 s_summ_criteria_opt: iss_methods | ".AND." | iss_not_equal | iss_equals
@@ -92,9 +95,13 @@ e_summ_statistics_to_include: "StatisticsToInclude" "=" s_stats_opts
 e_perform_task: "PerformTask"
 e_summ_db_name: "dbName" "=" STRING_LITERAL
 s_stats_opts: s_stats_opts s_stats_opt | s_stats_opt
-s_stats_opt: SM_SUM | SM_AVERAGE | "+"
+s_stats_opt: SM_SUM | SM_AVERAGE | SM_MAX | SM_MIN | SM_VARIANCE | SM_STD_DEV | "+"
 SM_SUM: "SM_SUM"
 SM_AVERAGE: "SM_AVERAGE"
+SM_MAX: "SM_MAX"
+SM_MIN: "SM_MIN"
+SM_VARIANCE: "SM_VARIANCE"
+SM_STD_DEV: "SM_STD_DEV"
 
 d_join: "JoinDatabase" e_join_opts
 e_join_opts: e_join_opts e_join_opt | e_join_opt

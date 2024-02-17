@@ -61,34 +61,34 @@ class RDMTranslator(Translator):
         self.indenter.write_to_file(f'{var_type, var_name, var_op}')
 
     def summarize(self, summ_dict):
-        self.indenter.write_to_file(f'summ: {summ_dict}')
-
         # could be criteria, could have fields to inc so could have no criteria & no inc, have criteria but no inc, have inc but not criteria or have no criteria or inc
         # account for having add field to include (need to join back to summby)
-        aggs = {"SM_SUM": ["sum"], "SM_AVERAGE": ["mean"]}
+        # aggs = {"SM_SUM": ["sum"], "SM_AVERAGE": ["mean"]}
 
-        db_name = summ_dict["dbname"].replace('.IMD', '')
-        fields_to_summarize = summ_dict["Add to Summarize"]
-        agg_func = [aggs.get(stat, "") for stat in summ_dict["stats"]]
-        agg_func = [stat[0] for stat in agg_func if stat]
-        fields_to_total = summ_dict["Add to Total"] 
-        count_dict = {fields_to_summarize[0]: ["count"] if fields_to_summarize[0] not in fields_to_total else agg_func + ["count"]}
-        fields_to_total = fields_to_total + [f"{fields_to_summarize[0]}"] if fields_to_summarize[0] not in fields_to_total else fields_to_total
-        criteria = summ_dict["Criteria"]
+        # db_name = summ_dict["dbname"].replace('.IMD', '')
+        # fields_to_summarize = summ_dict["Add to Summarize"]
+        # agg_func = [aggs.get(stat, "") for stat in summ_dict["stats"]]
+        # agg_func = [stat[0] for stat in agg_func if stat]
+        # fields_to_total = summ_dict["Add to Total"] 
+        # count_dict = {fields_to_summarize[0]: ["count"] if fields_to_summarize[0] not in fields_to_total else agg_func + ["count"]}
+        # fields_to_total = fields_to_total + [f"{fields_to_summarize[0]}"] if fields_to_summarize[0] not in fields_to_total else fields_to_total
+        # criteria = summ_dict["Criteria"]
 
-        self.indenter.write_to_file(f'wd.summBy("{db_name}", {fields_to_summarize}, agg_funcs={{key: {agg_func} if key != "{fields_to_summarize[0]}" else {count_dict[fields_to_summarize[0]]} for key in {fields_to_total}}})')
-        self.indenter.write_to_file(f'wd.renameCol(columns={{"{fields_to_summarize[0] + "_count"}": "NO_OF_RECS"}})')
+        # self.indenter.write_to_file(f'wd.summBy("{db_name}", {fields_to_summarize}, agg_funcs={{key: {agg_func} if key != "{fields_to_summarize[0]}" else {count_dict[fields_to_summarize[0]]} for key in {fields_to_total}}})')
+        # self.indenter.write_to_file(f'wd.renameCol(columns={{"{fields_to_summarize[0] + "_count"}": "NO_OF_RECS"}})')
         
-        if criteria:
-            self.indenter.write_to_file(f'wd.extract("{db_name}", filter="{criteria}")')
-            print("criteriaa")
+        # if criteria:
+        #     self.indenter.write_to_file(f'wd.extract("{db_name}", filter="{criteria}")')
+        #     print("criteriaa")
 
-        if "Add to Inc" in summ_dict:
-            fields_to_inc = summ_dict["Add to Inc"]
-            self.indenter.write_to_file(f'wd.join("{db_name}", right=wd.db("{db_name + "_summ"}"){[fields_to_inc]}, how="left")')
+        # if "Add to Inc" in summ_dict:
+        #     fields_to_inc = summ_dict["Add to Inc"]
+        #     self.indenter.write_to_file(f'wd.join("{db_name}", right=wd.db("{db_name + "_summ"}"){[fields_to_inc]}, how="left")')
 
+        # print(summ_dict)
+        # print(agg_func)
+        self.indenter.write_to_file(f'summ: {summ_dict}')
         print(summ_dict)
-        print(agg_func)
         
     def join(self, join_dict):
         self.indenter.write_to_file(f'join: {join_dict}')

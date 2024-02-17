@@ -77,6 +77,9 @@ class NewTransformer(Transformer):
     def s_bools(self, token):
         return token
     
+    def e_top_recs_extract_db_name(self, token):
+        self.top_recs_extract_opts.update({"db_name": token})
+    
     """ Struct Rules """
     def struct_cond_decl(self, _, id):
         self.translator.define_function(id)
@@ -123,7 +126,6 @@ class NewTransformer(Transformer):
     
     """ Summarization Rules """
     def d_summarize(self, *_):
-        # summby
         self.translator.summarize(self.summarize_task_opts)
     
     def e_summarize_opts(self, *_):
@@ -167,6 +169,15 @@ class NewTransformer(Transformer):
     def e_summ_create_percent_field(self, token):
         return {"create_percnt": token}
     
+    def e_summ_use_field_from_first_occurrence(self, token):
+        return {"use_field_from_first": token}
+    
+    def e_summ_result_name(self, token):
+        return {"result_name": token}
+    
+    def e_summ_use_quick_summarization(self, token):
+        return {"use_quick_summ": token}
+    
     def e_summ_statistics_to_include(self, token):
         return token
 
@@ -184,6 +195,18 @@ class NewTransformer(Transformer):
         
     def SM_AVERAGE(self, *_):
         self.summarize_agg_funcs_list.append("SM_AVERAGE")
+
+    def SM_MIN(self, *_):
+        self.summarize_agg_funcs_list.append("SM_MIN")
+
+    def SM_MAX(self, *_):
+        self.summarize_agg_funcs_list.append("SM_MAX")
+
+    def SM_VARIANCE(self, *_):
+        self.summarize_agg_funcs_list.append("SM_VARIANCE")
+
+    def SM_STD_DEV(self, *_):
+        self.summarize_agg_funcs_list.append("SM_STD_DEV")
 
 
     """ Join Rules """
@@ -568,12 +591,7 @@ class NewTransformer(Transformer):
 
     def e_top_recs_extract_perf_task(self, *_):
         return {"perf_task": ""}
-    
-    def e_top_recs_extract_db_name(self, token):
-        self.top_recs_extract_opts.update({"db_name": token})
 
-    def e_inner_client_open_db(self, *_):
-        return {"client": ""}
     
     """ Append Database Rules """
     def d_append_db(self, *_):
