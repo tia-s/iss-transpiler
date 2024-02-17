@@ -92,20 +92,18 @@ class RDMTranslator(Translator):
         
     def join(self, join_dict):
         self.indenter.write_to_file(f'join: {join_dict}')
-
         print(join_dict)
 
     def extract(self, extract_dict):
         self.indenter.write_to_file(f'extract: {extract_dict}')
-
         print(extract_dict)
 
     def export(self, export_dict):
         self.indenter.write_to_file(f'export: {export_dict}')
-
         print(export_dict)
 
     def cleanup(self, cleanup_dict):
+        self.indenter.write_to_file(f'cleanup: {cleanup_dict}')
         print(cleanup_dict)
 
     def table_manage(self, table_manage_dict):

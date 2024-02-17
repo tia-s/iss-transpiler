@@ -88,7 +88,7 @@ e_summ_result_name: "ResultName" "=" STRING_LITERAL
 e_summ_use_quick_summarization: "UseQuickSummarization" "=" s_bools
 e_summ_criteria: "Criteria" "=" DOUBLE_QUOTE s_summ_criteria_opts DOUBLE_QUOTE
 s_summ_criteria_opts: s_summ_criteria_opts s_summ_criteria_opt | s_summ_criteria_opt
-s_summ_criteria_opt: iss_methods | ".AND." | iss_not_equal | iss_equals
+s_summ_criteria_opt: iss_methods | ".AND." | iss_not_equal | iss_equals | 
 e_summ_output_db_name: "OutputDBName" "=" (STRING_LITERAL | IDENTIFIER)
 e_summ_create_percent_field: "CreatePercentField" "=" s_bools
 e_summ_statistics_to_include: "StatisticsToInclude" "=" s_stats_opts
