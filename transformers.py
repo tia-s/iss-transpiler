@@ -261,6 +261,15 @@ class NewTransformer(Transformer):
     def WI_JOIN_MATCH_ONLY(self, *_):
         return "WI_JOIN_MATCH_ONLY"
     
+    def WI_JOIN_NOC_SEC_MATCH(self, *_):
+        return "WI_JOIN_NOC_SEC_MATCH"
+    
+    def WI_JOIN_ALL_REC(self, *_):
+        return "WI_JOIN_ALL_REC"
+    
+    def WI_JOIN_NOC_PRI_MATCH(self, *_):
+        return "WI_JOIN_NOC_PRI_MATCH"
+    
     def e_join_db_name(self, id):
         self.join_task_opts.update({"db_name": id})
 

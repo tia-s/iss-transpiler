@@ -106,7 +106,7 @@ SM_STD_DEV: "SM_STD_DEV"
 
 d_join: "JoinDatabase" e_join_opts
 e_join_opts: e_join_opts e_join_opt | e_join_opt
-e_join_opt: e_join_task_opts | e_join_db_name | COMMENT
+e_join_opt: e_join_task_opts | e_join_db_name | COMMENT | e_inner_client_open_db | st_nts
 e_join_task_opts: "task" "." s_join_task_opts
 s_join_task_opts: e_file_to_join | e_include_all_p_fields | e_include_all_s_fields | e_add_s_fields_to_inc | e_add_p_fields_to_inc | e_add_match_key | e_join_create_virt_database | e_join_perform_task
 e_file_to_join: "FileToJoin" STRING_LITERAL
@@ -119,10 +119,12 @@ e_add_p_field_to_inc: "AddPFieldToInc" STRING_LITERAL
 e_add_match_key: "AddMatchKey" STRING_LITERAL "," STRING_LITERAL "," STRING_LITERAL
 e_join_create_virt_database: "CreateVirtualDatabase" "=" s_bools
 e_join_perform_task: "PerformTask" IDENTIFIER "," STRING_LITERAL "," s_join_types
-s_join_types: WI_JOIN_ALL_IN_PRIM | WI_JOIN_MATCH_ONLY | WI_JOIN_NOC_SEC_MATCH
+s_join_types: WI_JOIN_ALL_IN_PRIM | WI_JOIN_MATCH_ONLY | WI_JOIN_NOC_SEC_MATCH | WI_JOIN_ALL_REC | WI_JOIN_NOC_PRI_MATCH
 WI_JOIN_ALL_IN_PRIM: "WI_JOIN_ALL_IN_PRIM"
 WI_JOIN_MATCH_ONLY: "WI_JOIN_MATCH_ONLY"
 WI_JOIN_NOC_SEC_MATCH: "WI_JOIN_NOC_SEC_MATCH"
+WI_JOIN_ALL_REC: "WI_JOIN_ALL_REC"
+WI_JOIN_NOC_PRI_MATCH: "WI_JOIN_NOC_PRI_MATCH"
 e_join_db_name: "dbName" "=" STRING_LITERAL
 
 d_extract: "Extraction" e_extract_opts
