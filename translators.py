@@ -33,24 +33,25 @@ class RDMTranslator(Translator):
         self.indenter.write_to_file(f'def {id}():')
 
     def end_function(self):
-        self.indenter.indent_level -= 1
+        # self.indenter.indent_level -= 1
+        pass 
 
     def bp_cond_check(self, lst):
         # account for the "and"s
         for x in lst:
             x = x.replace('.IMD', '')
-            self.indenter.indent_level += 1
-            self.indenter.write_to_file(f'if not wd.open("{x}").empty:')
+            # self.indenter.indent_level += 1
+            # self.indenter.write_to_file(f'if not wd.open("{x}").empty:')
 
     def bp_cond_end(self):
-        self.indenter.indent_level -= 1
-
+        # self.indenter.indent_level -= 1
+        pass
     def imports(self):
         pass
 
     def open_table(self, id):
         id = id.replace('.IMD', '')
-        self.indenter.write_to_file(f'wd.open("{id}")')
+        # self.indenter.write_to_file(f'wd.open("{id}")')
 
     def declare_vars(self, var_dict):
         var_type = var_dict['type']
@@ -60,6 +61,8 @@ class RDMTranslator(Translator):
         self.indenter.write_to_file(f'{var_type, var_name, var_op}')
 
     def summarize(self, summ_dict):
+        self.indenter.write_to_file(f'summ: {summ_dict}')
+
         # could be criteria, could have fields to inc so could have no criteria & no inc, have criteria but no inc, have inc but not criteria or have no criteria or inc
         # account for having add field to include (need to join back to summby)
         aggs = {"SM_SUM": ["sum"], "SM_AVERAGE": ["mean"]}
@@ -88,11 +91,35 @@ class RDMTranslator(Translator):
         print(agg_func)
         
     def join(self, join_dict):
+        self.indenter.write_to_file(f'join: {join_dict}')
+
         print(join_dict)
 
     def extract(self, extract_dict):
+        self.indenter.write_to_file(f'extract: {extract_dict}')
+
         print(extract_dict)
-        
+
+    def export(self, export_dict):
+        self.indenter.write_to_file(f'export: {export_dict}')
+
+        print(export_dict)
+
+    def cleanup(self, cleanup_dict):
+        print(cleanup_dict)
+
+    def table_manage(self, table_manage_dict):
+        type = table_manage_dict['type']
+        if type == 'append field':
+            self.indenter.write_to_file(f'wd.addCol("{type}")')
+        else:
+            self.indenter.write_to_file(f'wd.renameCol("{type}")')
+        print(table_manage_dict)
+
+    def visual_connect(self, visual_connect_dict):
+        self.indenter.write_to_file(f'visual connect: {visual_connect_dict}')
+        print(visual_connect_dict)
+
 class Indenter():
     def __init__(self):
         self.indent_level = 0

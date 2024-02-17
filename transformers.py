@@ -2,6 +2,7 @@ from lark import Transformer, v_args, Token, Tree
 
 """
 account for if within join (bp with if after if)
+account for set nothings in add/rename cols
 """
 
 @v_args(inline=True)
@@ -22,6 +23,19 @@ class NewTransformer(Transformer):
 
         self.extract_task_opts = {}
         self.extract_add_fields_to_inc = []
+
+        self.export_task_opts = {}
+        self.export_add_fields_to_inc = []
+
+        self.cleanup_task_opts = {}
+        self.cleanup_delete_files = []
+
+        self.table_manage_task_opts = {}
+
+        self.visual_connect_task_opts = {}
+        self.visual_connect_add_fields_to_include = []
+        self.visual_connect_add_assgn = []
+        self.visual_connect_add_relations = []
 
         Token.__repr__ = lambda self: self.value
 
@@ -244,7 +258,155 @@ class NewTransformer(Transformer):
     def e_extract_db_name(self, id):
         self.extract_task_opts.update({"db_name": id})
 
+    """ Export Rules """
+    def d_export(self, *_):
+        self.translator.export(self.export_task_opts)
 
+    def e_export_opt(self, token):
+        return token
+    
+    def e_export_task_opts(self, token):
+        return token
+    
+    def s_export_task_opts(self, token):
+        self.export_task_opts.update(token)
+
+    def e_export_add_fields_to_inc(self, *_):
+        return {"fields": self.export_add_fields_to_inc}
+
+    def e_export_add_field_to_inc(self, field):
+        self.export_add_fields_to_inc.append(field)
+
+    def e_export_perform_task(self, *_):
+        return {"perform_task": ""}
+    
+    def e_export_eqn(self, token):
+        return {"eqn": token}
+    
+
+    """ Cleanup Rules """
+    def d_cleanup(self, *_):
+        self.translator.cleanup(self.cleanup_task_opts)
+
+    def e_cleanup_task_opts(self, token):
+        self.cleanup_task_opts.update(token)
+
+    def e_cleanup_task_opt(self, token):
+        return token
+    
+    def e_cleanup_delete_files(self, *_):
+        return {"files": self.cleanup_delete_files}
+    
+    def e_cleanup_delete_file(self, id):
+        self.cleanup_delete_files.append(id)
+
+    """ Table Management Rules """
+    def d_tbl_manage(self, *_):
+        self.translator.table_manage(self.table_manage_task_opts)
+
+    def e_tbl_mgmt_opt(self, token):
+        return token
+    
+    def e_tbl_mgmt_field_opts(self, token):
+        return token
+    
+    def e_tbl_mgmt_task_opts(self, token):
+        return token
+    
+    def s_tbl_mgmt_field_opts(self, token):
+        self.table_manage_task_opts.update(token)
+    
+    def s_tbl_mgmt_task_opts(self, token):
+        self.table_manage_task_opts.update(token)
+
+    def e_tbl_mgmt_name(self, token):
+        return {"name": token}
+    
+    def e_tbl_mgmt_desc(self, token):
+        return {"description": token}
+
+    def e_tbl_mgmt_len(self, token):
+        return {"length": token}
+    
+    def s_tbl_mgmt_types(self, token):
+        return token
+        
+    def e_tbl_mgmt_type(self, token):
+        return {"type": token}
+    
+    def e_tbl_mgmt_decimals(self, token):
+        return {"decimals": token}
+    
+    def e_tbl_mgmt_eqn(self, token):
+        return {"equation": token}
+    
+    def e_tbl_mgmt_append_field(self, *_):
+        return {"type": "apppend field"}
+    
+    def e_tbl_mgmt_replace_field(self, token):
+        return {"type": f"replace field ({token})"}
+
+    def e_tbl_mgmt_perform_task(self, *_):
+        return {"perform_task": ""}
+    
+
+    """ Visual Connect Rules """
+    def d_visual_connect(self, *_):
+        self.translator.visual_connect(self.visual_connect_task_opts)
+
+    def e_visual_connect_opt(self, token):
+        return token
+    
+    def e_visual_connect_task_opts(self, token):
+        return token
+    
+    def s_visual_connect_task_opts(self, token):
+        self.visual_connect_task_opts.update(token)
+
+    def e_visual_connect_add_fields_to_include(self, *_):
+        return {"fields_to_include": self.visual_connect_add_fields_to_include}
+
+    def e_visual_connect_add_field_to_include(self, db, field):
+        self.visual_connect_add_fields_to_include.append((db, field))
+
+    def e_visual_connect_add_relations(self, *_):
+        return {"add_relation": self.visual_connect_add_relations}
+    
+    def e_visual_connect_add_relation(self, token):
+        return token
+    
+    def s_visual_connect_add_relation_opts(self, *tokens):
+        return {"add_relation": "do later"}
+    
+    def e_visual_connect_master_database(self, token):
+        return {"master_db": token}
+    
+    def e_visual_connect_append_database_names(self, token):
+        return {"append_db_names": token}
+    
+    def e_visual_conenct_include_all_primary_recs(self, token):
+        return {"include_all_prim_recs": token}
+    
+    def e_visual_connect_add_database(self, token):
+        return {"add_db": token}
+    
+    def e_visual_connect_create_virt_database(self, token):
+        return {"create_virt_db": token}
+
+    def e_visual_connect_output_db_name(self, token):
+        return {"output_db": token}
+    
+    def e_visual_connect_perf_task(self, *_):
+        return {"perf_task": ""}
+    
+    def e_visual_connect_db_name(self, token):
+        self.visual_connect_task_opts.update({"db_name": token})
+
+    def e_visual_connect_add_assgns(self, *_):
+        self.visual_connect_task_opts.update({"add_assigns": self.visual_connect_add_assgn})
+
+    def e_visual_connect_add_assgn(self, *tokens):
+        self.visual_connect_add_assgn.append((tokens[0], tokens[1]))
 
     # def std_fns_decl(self, *tokens):
     #     return {"open_db": tokens[0], "fn": tokens[1]}
@@ -254,12 +416,6 @@ class NewTransformer(Transformer):
     
     # def st_fn(self, token):
     #     return token
-    
-
-
-
-    
-
 
     
 if __name__ == "__main__":

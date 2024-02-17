@@ -1,7 +1,6 @@
 from DataAnalytics import DataAnalytics
 wd = DataAnalytics()
 
-def BExtResult_Summ():
-	if not wd.open("TM5_Summ_INT").empty:
-		wd.open("TM5_Summ_INT")
-		
+def VisualConnectors():
+	visual connect: {'add_db': 'Account_Status_Change.IMD', 'add_assigns': [(id0, None), (id1, None)], 'master_db': id0, 'append_db_names': FALSE, 'include_all_prim_recs': TRUE, 'fields_to_include': [(id0, 'TRANSACTION_DATE'), (id0, 'TRAN_ID'), (id0, 'ACID'), (id0, 'TRANSACTION_AMT'), (id0, 'TRAN_PARTICULAR'), (id0, 'ENTRY_USER_ID'), (id0, 'PSTD_USER_ID'), (id0, 'RCRE_USER_ID'), (id0, 'RCRE_TIME_DATE'), (id0, 'RCRE_TIME_TIME'), (id0, 'CUST_ID'), (id0, 'TRANSACTION_CRNCY_CODE'), (id0, 'PART_TRANSACTION_TYPE'), (id1, 'REF_NUM'), (id1, 'TABLE_NAME'), (id1, 'TABLE_KEY'), (id1, 'ACID'), (id1, 'ENTERER_ID'), (id1, 'AUTH_ID'), (id1, 'MODIFIED_FIELDS_DATA'), (id1, 'AUDIT_DATE_DATE'), (id1, 'AUDIT_DATE_TIME'), (id1, 'COMP_STATUS_CHANGE'), (id1, 'COMP_CHANGE_FROM'), (id1, 'COMP_CHANGE_TO')], 'create_virt_db': False, 'add_relation': [], 'db_name': 'Transaction Audit Change Int.IMD', 'output_db': dbName, 'perf_task': ''}
+	
