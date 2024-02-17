@@ -76,13 +76,14 @@ d_summarize: "Summarization" e_summarize_opts
 e_summarize_opts: e_summarize_opts e_summarize_opt | e_summarize_opt
 e_summarize_opt: e_summarize_task_opts | e_summ_db_name | COMMENT | e_inner_client_open_db | st_nts
 e_summarize_task_opts: "task" "." s_summarize_task_opts
-s_summarize_task_opts: e_add_fields_to_summarize | e_add_fields_to_total | e_add_fields_to_inc | e_summ_criteria | e_summ_output_db_name | e_summ_create_percent_field | e_summ_statistics_to_include | e_perform_task | e_summ_use_field_from_first_occurrence | e_summ_result_name | e_summ_use_quick_summarization
+s_summarize_task_opts: e_add_fields_to_summarize | e_add_fields_to_total | e_add_fields_to_inc | e_summ_include_all_fields | e_summ_criteria | e_summ_output_db_name | e_summ_create_percent_field | e_summ_statistics_to_include | e_perform_task | e_summ_use_field_from_first_occurrence | e_summ_result_name | e_summ_use_quick_summarization
 e_add_fields_to_summarize: e_add_fields_to_summarize e_add_field_to_summarize | e_add_field_to_summarize
 e_add_field_to_summarize: "AddFieldToSummarize" STRING_LITERAL
 e_add_fields_to_total: e_add_fields_to_total e_add_field_to_total | e_add_field_to_total
 e_add_field_to_total: "AddFieldToTotal" STRING_LITERAL
 e_add_fields_to_inc: e_add_fields_to_inc e_add_field_to_inc | e_add_field_to_inc
 e_add_field_to_inc: "AddFieldToInc" STRING_LITERAL
+e_summ_include_all_fields: "IncludeAllFields"
 e_summ_use_field_from_first_occurrence: "UseFieldFromFirstOccurrence" "=" s_bools
 e_summ_result_name: "ResultName" "=" STRING_LITERAL
 e_summ_use_quick_summarization: "UseQuickSummarization" "=" s_bools
