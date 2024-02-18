@@ -108,13 +108,19 @@ class RDMTranslator(Translator):
         print(cleanup_dict)
 
     def table_manage(self, table_manage_dict):
+        if "replace" in table_manage_dict:
+            self.indenter.write_to_file(f'wd.renameCol(columns={{{table_manage_dict["name"]}: {table_manage_dict["replace"]}}})')
+        else:
+            self.indenter.write_to_file(f'wd.addCol({table_manage_dict["name"]}, lambda row: "")')
+
+
         # type = table_manage_dict['type']
         # if type == 'append field':
         #     self.indenter.write_to_file(f'wd.addCol("{type}")')
         # else:
         #     self.indenter.write_to_file(f'wd.renameCol("{type}")')
         print(table_manage_dict)
-        self.indenter.write_to_file(f'table: {table_manage_dict}')
+        # self.indenter.write_to_file(f'table: {table_manage_dict}')
 
     def connect(self, visual_connect_dict):
         self.indenter.write_to_file(f'visual connect: {visual_connect_dict}')
