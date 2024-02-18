@@ -1,13 +1,5 @@
 from DataAnalytics import DataAnalytics
 wd = DataAnalytics()
 
-def AddFields():
-wd.addCol("NARR", lambda row: "")
-wd.addCol("NARR", lambda row: "")
-wd.addCol("NARR", lambda row: "")
-wd.addCol("NARR", lambda row: "")
-wd.renameCol(columns={"BIRTHDAT": "BIRTHDAT_DATE"})
-def AExt_Master():
-wd.extract("Master_Funds", cols=['"UTCID"', '"TRUSTCOD"', '"ACCTNOP"'])
-def BACreateDate():
-wd.addCol("DATE_CREATED", lambda row: "")
+def BAJoinCustomers():
+wd.join("Registrations", right=wd.db("REPORTSVR.VDPUCID01")[['"ADDRESS1"', '"ADDRESS2"', '"ADDRESS3"', '"BIRTHDAT"', '"HOLDRTYP"', '"FIRSTNAME"', '"SURNAME"']], how=WI_JOIN_ALL_IN_PRIM, on=['"UTCID"', '"UTCID"', '"A"'])

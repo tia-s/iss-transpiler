@@ -91,7 +91,7 @@ class RDMTranslator(Translator):
         print(summ_dict)
         
     def join(self, join_dict):
-        self.indenter.write_to_file(f'join: {join_dict}')
+        self.indenter.write_to_file(f'wd.join({join_dict["db_name"]}, right=wd.db({join_dict["file_to_join"]})[{join_dict["s_fields"]}], how={str(join_dict["perform_task"])}, on={join_dict["match_keys"]})')
         print(join_dict)
 
     def extract(self, extract_dict):
