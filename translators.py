@@ -29,7 +29,7 @@ class RDMTranslator(Translator):
         self.indenter.write_to_file(f'#{comment}')
 
     def define_function(self, id):
-        self.indenter.indent_level += 1
+        # self.indenter.indent_level += 1
         self.indenter.write_to_file(f'def {id}():')
 
     def end_function(self):
@@ -95,8 +95,10 @@ class RDMTranslator(Translator):
         print(join_dict)
 
     def extract(self, extract_dict):
-        self.indenter.write_to_file(f'extract: {extract_dict}')
-        print(extract_dict)
+        extract_output = f'wd.extract({extract_dict["db_name"]}, cols={extract_dict["fields"]}'
+        if "filter" in extract_dict and extract_dict["filter"] != '':
+            extract_output += f", filter='{extract_dict['filter']}'"
+        self.indenter.write_to_file(f"{extract_output})")
 
     def export(self, export_dict):
         self.indenter.write_to_file(f'export: {export_dict}')
