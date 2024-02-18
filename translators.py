@@ -103,7 +103,8 @@ class RDMTranslator(Translator):
         print(export_dict)
 
     def cleanup(self, cleanup_dict):
-        self.indenter.write_to_file(f'cleanup: {cleanup_dict}')
+        for fil in cleanup_dict["files"]:
+            self.indenter.write_to_file(f'wd.delete({fil})')
         print(cleanup_dict)
 
     def table_manage(self, table_manage_dict):
@@ -142,6 +143,10 @@ class RDMTranslator(Translator):
     def append_db(self, append_dict):
         self.indenter.write_to_file(f"append: {append_dict}")
         print(append_dict)
+
+    def import_odbc(self, import_dict):
+        self.indenter.write_to_file(f"import odbc: {import_dict}")
+        print(import_dict)   
 
 class Indenter():
     def __init__(self):

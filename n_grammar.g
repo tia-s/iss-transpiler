@@ -49,7 +49,7 @@ st_opts: "field" | "task" | "db"
 
 e_inner_client_open_db: "Client" "." "OpenDatabase" "(" (IDENTIFIER | STRING_LITERAL) ")" 
 
-i_fns: bp_std_fns | std_fns | d_cleanup | COMMENT
+i_fns: bp_std_fns | std_fns | d_cleanup | d_import | COMMENT
 
 bp_std_fns: have_records_check_decl std_fns_decl  have_records_check_else? have_records_check_tnl have_records_check_else?
 have_records_check_decl: IF have_records_opts THEN
@@ -158,12 +158,6 @@ e_export_perform_task: "PerformTask" "Client" "." "WorkingDirectory" s_export_pe
 s_export_perform_task_opts: s_export_perform_task_opts s_export_perform_task_opt | s_export_perform_task_opt
 s_export_perform_task_opt: "&" | "," | INT | STRING_LITERAL | IDENTIFIER "." IDENTIFIER | "eqn" | IDENTIFIER
 e_export_eqn: "eqn" "=" STRING_LITERAL
-
-d_cleanup: e_cleanup_task_opts
-e_cleanup_task_opts: e_cleanup_task_opts e_cleanup_task_opt | e_cleanup_task_opt
-e_cleanup_task_opt: e_cleanup_delete_files
-e_cleanup_delete_files: e_cleanup_delete_files e_cleanup_delete_file | e_cleanup_delete_file
-e_cleanup_delete_file: "DeleteFile" "(" STRING_LITERAL ")"
 
 d_tbl_manage: "TableManagement" e_tbl_mgmt_opts
 e_tbl_mgmt_opts: e_tbl_mgmt_opts e_tbl_mgmt_opt | e_tbl_mgmt_opt
@@ -285,3 +279,21 @@ e_append_db_add_databases: e_append_db_add_databases e_append_db_add_database | 
 e_append_db_add_database: "AddDatabase" STRING_LITERAL
 e_append_db_perf_task: "PerformTask" "dbName" "," STRING_LITERAL
 e_append_db_db_name: "dbName" "=" STRING_LITERAL
+
+d_cleanup: e_cleanup_task_opts
+e_cleanup_task_opts: e_cleanup_task_opts e_cleanup_task_opt | e_cleanup_task_opt
+e_cleanup_task_opt: e_cleanup_delete_files
+e_cleanup_delete_files: e_cleanup_delete_files e_cleanup_delete_file | e_cleanup_delete_file
+e_cleanup_delete_file: "DeleteFile" "(" STRING_LITERAL ")"
+
+d_import: e_import_opts
+e_import_opts: e_import_opts e_import_opt | e_import_opt
+e_import_opt: e_import_db_name | e_count_db_records | e_import_client_opts
+e_import_client_opts: "Client" "." (e_import_odbc_file | e_client_close_all)
+e_import_db_name: "dbName" "=" STRING_LITERAL
+e_import_odbc_file: "ImportODBCFile" s_import_odbc_file_opts
+e_import_char_len: "Chr" "(" INT ")"
+s_import_odbc_file_opts: s_import_odbc_file_opts s_import_odbc_file_opt | s_import_odbc_file_opt
+s_import_odbc_file_opt: e_import_char_len | "&" | STRING_LITERAL | "." | "dbName" | s_bools | IDENTIFIER | ","
+e_count_db_records: "Count_Database_Records" "(" "dbName" ")"
+e_client_close_all: "CloseAll"

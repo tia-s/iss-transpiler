@@ -1,8 +1,19 @@
 from DataAnalytics import DataAnalytics
 wd = DataAnalytics()
 
-# Data: Direct Extraction
-
-def DirectExtraction():
-	extract: {'fields': ['VVA_INT1', 'TAX_EXEMPT_AMT'], 'created_fields': [('TEST', '', 'WI_BOOL', 1, 0, '0')], 'db_name': 'EXTRACTION7.IMD', 'filter': '', 'create_virtual_database': False, 'perform_task': ''}
+def SCleanup():
+	wd.delete("Master_Funds")
+	wd.delete("Master_History")
+	wd.delete("DPUTR04N")
+	wd.delete("DPURF031")
+	wd.delete("DPUTR011")
+	wd.delete("DPUTR021")
+	wd.delete("DPUTR081")
+	wd.delete("Master_History_File")
+	wd.delete("Transaction_History_INT")
+	wd.delete("Transaction_History")
+	wd.delete("History_Transaction_Hist")
+	wd.delete("Risk_Ratings-")
+	wd.delete("Risk Ratings and PORTAL")
+	wd.delete("History_Transaction_Hist_Risk")
 	

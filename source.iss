@@ -1,16 +1,16 @@
-' Data: Direct Extraction
-Function DirectExtraction
-	Set db = Client.OpenDatabase("Append Databases.IMD")
-	Set task = db.Extraction
-	task.AddFieldToInc "VVA_INT1"
-	task.AddFieldToInc "TAX_EXEMPT_AMT"
-	task.AddField "TEST", "", WI_BOOL, 1, 0, "0"
-	dbName = "EXTRACTION7.IMD"
-	task.AddExtraction dbName, "", ""
-	task.CreateVirtualDatabase = False
-	task.AddExtraction "EXTRACTION8.IMD", "", ""
-	task.PerformTask 1, 2
-	Set task = Nothing
-	Set db = Nothing
-	Client.OpenDatabase (dbName)
+Function SCleanup
+	DeleteFile("Master_Funds.IMD") 
+	DeleteFile("Master_History.IMD")
+	DeleteFile("DPUTR04N.IMD")
+	DeleteFile("DPURF031.IMD")
+	DeleteFile("DPUTR011.IMD")
+	DeleteFile("DPUTR021.IMD")
+	DeleteFile("DPUTR081.IMD")
+	DeleteFile("Master_History_File.IMD")
+	DeleteFile("Transaction_History_INT.IMD")
+	DeleteFile("Transaction_History.IMD")
+	DeleteFile("History_Transaction_Hist.IMD")
+	DeleteFile("Risk_Ratings-")
+	DeleteFile("Risk Ratings and PORTAL.IMD")
+	DeleteFile("History_Transaction_Hist_Risk.IMD")	
 End Function

@@ -56,6 +56,9 @@ class NewTransformer(Transformer):
         self.append_db_task_opts = {}
         self.append_db_add_dbs = []
 
+        self.import_odbc_task_opts = {}
+        self.import_odbc_file_opts = []
+
         Token.__repr__ = lambda self: self.value
 
     def _reset(self):
@@ -73,7 +76,7 @@ class NewTransformer(Transformer):
 
     def COMMENT(self, comment):
         comment = comment.replace('\'', '')
-        self.translator.comment(comment)
+        # self.translator.comment(comment)
     
     def s_bools(self, token):
         return token
@@ -86,6 +89,9 @@ class NewTransformer(Transformer):
     
     def WI_BOOL(self, *_):
         return "WI_BOOL"
+    
+    def STRING_LITERAL(self, token):
+        return token.replace(".IMD", "")
     
     """ Struct Rules """
     def struct_cond_decl(self, _, id):
@@ -640,6 +646,37 @@ class NewTransformer(Transformer):
     def e_append_db_db_name(self, token):
         self.append_db_task_opts.update({"db_name": token})
 
+    """ Import ODBC Rules"""
+    def d_import(self, *_):
+        self.translator.import_odbc(self.import_odbc_task_opts)
+
+    def e_import_opt(self, token):
+        self.import_odbc_task_opts.update(token)
+    
+    def e_import_client_opts(self, token):
+        return token
+    
+    def e_import_db_name(self, token):
+        return {"db_name": token}
+
+    def e_import_odbc_file(self, *_):
+        return {"import_odbc": self.import_odbc_file_opts}
+
+    def e_import_char_len(self, token):
+        return ("chr", token)
+    
+    def s_import_odbc_file_opts(self, *_):
+        return self.import_odbc_file_opts
+        
+    def s_import_odbc_file_opt(self, token=''):
+        if token and token != '"':
+            self.import_odbc_file_opts.append(token)
+
+    def e_count_db_records(self, *_):
+        return {"db_records": ""}
+    
+    def e_client_close_all(self, *_):
+        return {"close_all": ""}
 
 
     # def std_fns_decl(self, *tokens):
