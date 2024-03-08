@@ -21,8 +21,10 @@ class RDMTranslator(Translator):
     # fix new line after comments
     def __init__(self):
         with open('output.py', 'w') as f:
+            f.write('import datetime as dt\n')
+            f.write('from os.path import join, abspath\n')
             f.write('from DataAnalytics import DataAnalytics\n')
-            f.write('wd = DataAnalytics()\n\n')
+            f.write('PARENT_DIR = abspath('')\n\n   ')
         self.indenter = Indenter()
 
     def comment(self, comment):
@@ -34,6 +36,8 @@ class RDMTranslator(Translator):
 
     def end_function(self):
         # self.indenter.indent_level -= 1
+        self.indenter.write_to_file(f'\n')
+
         pass 
 
     def bp_cond_check(self, lst):
@@ -41,7 +45,7 @@ class RDMTranslator(Translator):
         for x in lst:
             x = x.replace('.IMD', '')
             # self.indenter.indent_level += 1
-            # self.indenter.write_to_file(f'if not wd.open("{x}").empty:')
+            self.indenter.write_to_file(f'if not wd.db({x.replace(" ", "_")}).empty:')
 
     def bp_cond_end(self):
         # self.indenter.indent_level -= 1
@@ -50,8 +54,7 @@ class RDMTranslator(Translator):
         pass
 
     def open_table(self, id):
-        id = id.replace('.IMD', '')
-        # self.indenter.write_to_file(f'wd.open("{id}")')
+        self.indenter.write_to_file(f'wd.open({id.replace(" ", "_")})')
 
     def declare_vars(self, var_dict):
         var_type = var_dict['type']
@@ -63,39 +66,39 @@ class RDMTranslator(Translator):
     def summarize(self, summ_dict):
         # could be criteria, could have fields to inc so could have no criteria & no inc, have criteria but no inc, have inc but not criteria or have no criteria or inc
         # account for having add field to include (need to join back to summby)
-        # aggs = {"SM_SUM": ["sum"], "SM_AVERAGE": ["mean"]}
+        aggs = {"SM_SUM": ["sum"], "SM_AVERAGE": ["mean"]}
 
-        # db_name = summ_dict["dbname"].replace('.IMD', '')
-        # fields_to_summarize = summ_dict["Add to Summarize"]
-        # agg_func = [aggs.get(stat, "") for stat in summ_dict["stats"]]
-        # agg_func = [stat[0] for stat in agg_func if stat]
-        # fields_to_total = summ_dict["Add to Total"] 
-        # count_dict = {fields_to_summarize[0]: ["count"] if fields_to_summarize[0] not in fields_to_total else agg_func + ["count"]}
-        # fields_to_total = fields_to_total + [f"{fields_to_summarize[0]}"] if fields_to_summarize[0] not in fields_to_total else fields_to_total
-        # criteria = summ_dict["Criteria"]
+        db_name = summ_dict["dbname"].replace('.IMD', '')
+        fields_to_summarize = summ_dict["Add to Summarize"]
+        agg_func = [aggs.get(stat, "") for stat in summ_dict["stats"]]
+        agg_func = [stat[0] for stat in agg_func if stat]
+        fields_to_total = summ_dict["Add to Total"] 
+        count_dict = {fields_to_summarize[0]: ["count"] if fields_to_summarize[0] not in fields_to_total else agg_func + ["count"]}
+        fields_to_total = fields_to_total + [f"{fields_to_summarize[0]}"] if fields_to_summarize[0] not in fields_to_total else fields_to_total
+        criteria = summ_dict.get("Criteria", "")
 
-        # self.indenter.write_to_file(f'wd.summBy("{db_name}", {fields_to_summarize}, agg_funcs={{key: {agg_func} if key != "{fields_to_summarize[0]}" else {count_dict[fields_to_summarize[0]]} for key in {fields_to_total}}})')
-        # self.indenter.write_to_file(f'wd.renameCol(columns={{"{fields_to_summarize[0] + "_count"}": "NO_OF_RECS"}})')
+        self.indenter.write_to_file(f'wd.summBy("{db_name.replace(" ", "_")}", {fields_to_summarize}, agg_funcs={{key: {agg_func} if key != "{fields_to_summarize[0]}" else {count_dict[fields_to_summarize[0]]} for key in {fields_to_total}}})')
+        self.indenter.write_to_file(f'wd.renameCol(columns={{"{fields_to_summarize[0] + "_count"}": "NO_OF_RECS"}})')
         
-        # if criteria:
-        #     self.indenter.write_to_file(f'wd.extract("{db_name}", filter="{criteria}")')
-        #     print("criteriaa")
+        if criteria:
+            self.indenter.write_to_file(f'wd.extract("{db_name.replace(" ", "_")}", filter="{criteria}")')
+            print("criteriaa")
 
-        # if "Add to Inc" in summ_dict:
-        #     fields_to_inc = summ_dict["Add to Inc"]
-        #     self.indenter.write_to_file(f'wd.join("{db_name}", right=wd.db("{db_name + "_summ"}"){[fields_to_inc]}, how="left")')
+        if "Add to Inc" in summ_dict:
+            fields_to_inc = summ_dict["Add to Inc"]
+            self.indenter.write_to_file(f'wd.join("{db_name.replace(" ", "_")}", right=wd.db("{db_name.replace(" ", "_") + "_summ"}"){[fields_to_inc]}, how="left")')
 
         # print(summ_dict)
         # print(agg_func)
-        self.indenter.write_to_file(f'summ: {summ_dict}')
+        # self.indenter.write_to_file(f'wd.summby({summ_dict["dbname"].replace(" ", "_")}, cols={summ_dict["Add to Summarize"]})')
         print(summ_dict)
         
     def join(self, join_dict):
-        self.indenter.write_to_file(f'wd.join({join_dict["db_name"]}, right=wd.db({join_dict["file_to_join"]})[{join_dict["s_fields"]}], how={str(join_dict["perform_task"])}, on={join_dict["match_keys"]})')
+        self.indenter.write_to_file(f'wd.join({join_dict["db_name"].replace(" ", "_")}, right=wd.db({join_dict["file_to_join"]})[{join_dict["s_fields"]}], how={str(join_dict["perform_task"])}, on={join_dict["match_keys"]})')
         print(join_dict)
 
     def extract(self, extract_dict):
-        extract_output = f'wd.extract({extract_dict["db_name"]}, cols={extract_dict["fields"]}'
+        extract_output = f'wd.extract({extract_dict["db_name"].replace(" ", "_")}, cols={extract_dict["fields"]}'
         if "filter" in extract_dict and extract_dict["filter"] != '':
             extract_output += f", filter='{extract_dict['filter']}'"
         self.indenter.write_to_file(f"{extract_output})")
@@ -105,13 +108,15 @@ class RDMTranslator(Translator):
         print(export_dict)
 
     def cleanup(self, cleanup_dict):
+        self.indenter.write_to_file(f'if wd.tblName:\n\twd.close()\n')
+
         for fil in cleanup_dict["files"]:
             self.indenter.write_to_file(f'wd.delete({fil})')
         print(cleanup_dict)
 
     def table_manage(self, table_manage_dict):
         if "replace" in table_manage_dict:
-            self.indenter.write_to_file(f'wd.renameCol(columns={{{table_manage_dict["name"]}: {table_manage_dict["replace"]}}})')
+            self.indenter.write_to_file(f'wd.renameCol(columns={{{table_manage_dict["replace"]}: {table_manage_dict["name"]}}})')
         else:
             self.indenter.write_to_file(f'wd.addCol({table_manage_dict["name"]}, lambda row: "")')
 

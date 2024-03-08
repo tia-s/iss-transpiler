@@ -1,21 +1,15 @@
-Function BAJoinCustomers
-If haveRecords("dbo.Registrations.IMD") Then
-Set db = Client.OpenDatabase("dbo.Registrations.IMD")
-	Set task = db.JoinDatabase
-	task.FileToJoin "REPORTSVR.VDPUCID01.IMD"
-	task.IncludeAllPFields
-	task.AddSFieldToInc "ADDRESS1"
-	task.AddSFieldToInc "ADDRESS2"
-	task.AddSFieldToInc "ADDRESS3"
-	task.AddSFieldToInc "BIRTHDAT"
-	task.AddSFieldToInc "HOLDRTYP"
-	task.AddSFieldToInc "FIRSTNAME"
-	task.AddSFieldToInc "SURNAME"
-	task.AddMatchKey "UTCID", "UTCID", "A"
+
+' Analysis: Duplicate Key Detection
+Function DuplicateKeyDetection
+	Set db = Client.OpenDatabase("PUB.mb.IMD")
+	Set task = db.DupKeyDetection
+	task.AddFieldToInc "MAIL_COUNTRY_CD"
+	task.AddFieldToInc "GUID_ID"
+	task.AddKey "MB_NUM", "A"
+	task.OutputDuplicates = TRUE
+	dbName = "Duplicate.IMD"
 	task.CreateVirtualDatabase = False
-	dbName = "Registrations.IMD"
-	task.PerformTask dbName, "", WI_JOIN_ALL_IN_PRIM
+	task.PerformTask dbName, ""
 	Set task = Nothing
 	Set db = Nothing
-End If
 End Function

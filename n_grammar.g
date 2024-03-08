@@ -183,13 +183,14 @@ e_tbl_mgmt_len: "Length" "=" INT
 e_tbl_mgmt_type: "Type" "=" s_tbl_mgmt_types
 e_tbl_mgmt_decimals: "Decimals" "=" INT
 e_tbl_mgmt_eqn: "Equation" "=" STRING_LITERAL
-s_tbl_mgmt_types: WI_CHAR_FIELD | WI_TIME_FIELD | WI_DATE_FIELD | WI_VIRT_CHAR | WI_VIRT_DATE | WI_NUM_FIELD
+s_tbl_mgmt_types: WI_CHAR_FIELD | WI_TIME_FIELD | WI_DATE_FIELD | WI_VIRT_CHAR | WI_VIRT_DATE | WI_NUM_FIELD | WI_VIRT_NUM
 WI_CHAR_FIELD: "WI_CHAR_FIELD"
 WI_TIME_FIELD: "WI_TIME_FIELD"
 WI_DATE_FIELD: "WI_DATE_FIELD"
 WI_VIRT_CHAR: "WI_VIRT_CHAR"
 WI_VIRT_DATE: "WI_VIRT_DATE"
 WI_NUM_FIELD: "WI_NUM_FIELD"
+WI_VIRT_NUM: "WI_VIRT_NUM"
 
 d_visual_connect: "VisualConnector" e_visual_connect_opts
 e_visual_connect_opts: e_visual_connect_opts e_visual_connect_opt | e_visual_connect_opt

@@ -76,7 +76,7 @@ class NewTransformer(Transformer):
 
     def COMMENT(self, comment):
         comment = comment.replace('\'', '')
-        # self.translator.comment(comment)
+        self.translator.comment(comment)
     
     def s_bools(self, token):
         return token
