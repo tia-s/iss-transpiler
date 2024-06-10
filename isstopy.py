@@ -9,7 +9,7 @@ def main():
 
     parser = Lark(grammar=grammar, start='start', parser='lalr')
 
-    tree = parser.parse(text)
+    tree = parser.parse(text.upper())
 
     translator = RDMTranslator()
     transformer = IDEATransformer(translator)

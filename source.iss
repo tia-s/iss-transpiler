@@ -1,29 +1,22 @@
-' Create a many to many match of the records to be analysed.
-Function Join_Transaction_Status
-If haveRecords("Transaction Audit Change.IMD") Then
-	Set db = Client.OpenDatabase("Transaction Audit Change.IMD")
-	Set task = db.TableManagement
-	Set field = db.TableDef.NewField
-		field.Name = "COMP_DORMANT_TXN1"
-		task.AppendField field
-	Set field = Nothing
-	Set task = Nothing
-	Set db = Nothing
-End If
-If haveRecords("Transaction Audit Change.IMD") Then
-	Set db = Client.OpenDatabase("Transaction Audit Change.IMD")
-	Set task = db.TableManagement
-	Set field = db.TableDef.NewField
-		field.Name = "COMP_DORMANT_TXN1"
-		field.Description = ""
-		field.Type = WI_VIRT_CHAR
-		field.Equation = ""
-		field.Length = 1
-		task.AppendField field
-	Set field = Nothing
-	Set task = Nothing
-	Set db = Nothing
-End If
-End Function
-' Create a many to many match of the records to be analysed.
 
+'----- Constants -----
+
+Const RESULT_FILENAME = "Transactions_Monthly"
+Const scriptname_log ="Transactions_Monthly.iss"
+Global errors_string As String
+Const division = ""
+Dim fso As Object
+Dim records As Double
+Dim db As Object
+Dim rs As Object
+Dim pm As ProjectManagement
+records = 0
+haveRecords = False
+Dim a_count As Double
+Dim db As Object
+Dim table As Object
+Dim fields As Double
+Dim cnfield As Object
+Dim task As Object
+Dim db As Object
+Dim table As Object
