@@ -1,7 +1,7 @@
-%import common.ESCAPED_STRING -> STRING_LITERAL
-%import common.INT -> INT
+%import common.ESCAPED_STRING -> T_STRING_LITERAL
+%import common.INT -> T_INT
 %import common.WS
-%import common.CNAME -> IDENTIFIER
+%import common.CNAME -> T_IDENTIFIER
 
 %ignore WS
 
