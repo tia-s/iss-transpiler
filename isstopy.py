@@ -3,7 +3,7 @@ from translators import RDMTranslator
 from transformers import IDEATransformer
 
 def main():
-    with open('grammar.g', 'r') as f, open('source.iss', 'r') as ff:
+    with open('rules.g', 'r') as f, open('source.iss', 'r') as ff:
         grammar = f.read()
         text = ff.read()
 
