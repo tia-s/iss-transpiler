@@ -5,7 +5,7 @@
 
 %ignore WS
 
-start: (stmt_var_assgn | stmt_var_decl | T_COMMENT)*
+start: (T_COMMENT | stmt_var_assgn | stmt_var_decl | sub_main | fn | loop_for)*
 
 T_COMMENT: /'[^\n]*/
 
