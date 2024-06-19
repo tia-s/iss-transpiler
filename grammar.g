@@ -5,34 +5,52 @@
 
 %ignore WS
 
-start: (var_assgn | var_decl | T_COMMENT)*
+start: (stmt_var_assgn | stmt_var_decl | T_COMMENT)*
 
 T_COMMENT: /'[^\n]*/
 
-// Variable Declaration
-T_CONST: "CONST"
-T_GLOBAL: "GLOBAL"
-T_DIM: "DIM"
+// Arithmetic Operators
+T_OP_EXP: "^"
+T_OP_MUL: "*"
+T_OP_DIV: "/"
+T_OP_INT_DIV: "\"
+T_OP_MOD: "MOD"
+T_OP_ADD: "+"
+T_OP_SUB: "-"
+T_OP_CONCAT: "&"
 
-s_dcl: T_CONST | T_GLOBAL | T_DIM
+// Bit Shift Operators
+T_LSHIFT: "<<"
+T_RSHIFT: ">>"
 
-T_AS: "AS"
+// Assignment Operators
+T_OP_ASSGN: "="
+T_OP_EXP_ASSGN: "^="
+T_OP_MUL_ASSGN: "*="
+T_OP_DIV_ASSGN: "/="
+T_OP_INT_DIV_ASSGN: "\="
+T_OP_ADD_ASSGN: "+="
+T_OP_SUB_ASSGN: "-="
+T_OP_LSHIFT_ASSGN: "<<="
+T_OP_RSHIFT_ASSGN: ">>="
+T_OP_CONCAT_ASSGN: "&="
 
-// Type Keywords
-T_STRING: "STRING"
-T_OBJECT: "OBJECT"
-T_DOUBLE: "DOUBLE"
-T_PROJECT_MANAGEMENT: "PROJECTMANAGEMENT"
-s_typ: T_STRING | T_OBJECT | T_DOUBLE | T_PROJECT_MANAGEMENT
+// Comparison Operators
+T_OP_LT: "<"
+T_OP_LTE: "<="
+T_OP_GT: ">"
+T_OP_GTE: ">="
+T_OP_NEQ: "<>"
+T_OP_IS: "Is"
+T_OP_IS_NOT: "ISNOT"
+T_OP_LIKE: "LIKE"
 
-s_bool: "FALSE" | "TRUE"
-s_assgn_vals: s_bool | INT | STRING_LITERAL
-
-// Operators
-T_EQUAL: "="
-
-// Assignments
-var_assgn: s_dcl? IDENTIFIER T_EQUAL s_assgn_vals
-
-// Declarations
-var_decl: s_dcl IDENTIFIER T_AS s_typ
+// Bitwise Operators
+T_OP_AND: "AND"
+T_OP_NOT: "NOT"
+T_OP_OR: "OR"
+T_OP_XOR: "XOR"
+T_OP_AND_ALS: "ANDALSO"
+T_OR_ELS: "ORELSE"
+T_IS_FALSE: "ISFALSE"
+T_IS_TRUE: "ISTRUE"
