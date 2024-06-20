@@ -5,7 +5,8 @@
 
 %ignore WS
 
-start: (T_COMMENT | stmt_var_assgn | stmt_var_decl | sub_main | fn | loop_for)*
+// start: (T_COMMENT | stmt_var_assgn | stmt_var_decl | sub_main | fn | loop_for)*
+start: (T_COMMENT )*
 
 T_COMMENT: /'[^\n]*/
 
@@ -13,7 +14,6 @@ T_COMMENT: /'[^\n]*/
 T_OP_EXP: "^"
 T_OP_MUL: "*"
 T_OP_DIV: "/"
-T_OP_INT_DIV: "\"
 T_OP_MOD: "MOD"
 T_OP_ADD: "+"
 T_OP_SUB: "-"
@@ -258,3 +258,13 @@ T_PUNCT_TILDE: "~"
 T_PUNCT_BACKSLASH: "\\"
 T_PUNCT_UNDERSCORE: "_"
 T_PUNCT_BACKTICK: "`"
+
+// Constant Variable Assignments
+stmt_var_assgn: const_var_assgn
+const_var_assgn: g_access_modifiers? T_KW_CONST const_var_assgn_opts
+const_var_assgn_opts: const_var_assgn_opts const_var_assgn_opt | const_var_assgn_opt
+const_var_assgn_opt: T_IDENTIFIER (T_KW_AS g_var_data_types)? T_OP_ASSGN g_var_assgn_vals | T_PUNCT_COMMA
+
+g_var_assgn_vals: T_STRING_LITERAL | T_KW_FALSE | T_KW_TRUE | T_INT
+g_access_modifiers: T_KW_PRIVATE | T_KW_PROTECTED | T_KW_FRIEND | T_KW_PUBLIC | T_KW_PROTECTED T_KW_FRIEND
+g_var_data_types: T_KW_BOOLEAN | T_KW_BYTE | T_KW_CHAR | T_KW_DATE | T_KW_DECIMAL | T_KW_DOUBLE | T_KW_INTEGER | T_KW_LONG | T_KW_SHORT | T_KW_SINGLE | T_KW_STRING

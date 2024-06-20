@@ -11,11 +11,11 @@ def main():
 
     tree = parser.parse(text.upper())
 
-    translator = RDMTranslator()
-    transformer = IDEATransformer(translator)
-    flattened = transformer.transform(tree)
+    # translator = RDMTranslator()
+    # transformer = IDEATransformer(translator)
+    # flattened = transformer.transform(tree)
 
-    print(flattened)
+    print(tree.pretty())
 
 if __name__ == "__main__":
     main()
