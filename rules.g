@@ -6,7 +6,7 @@
 %ignore WS
 
 // start: (T_COMMENT | stmt_var_assgn | stmt_var_decl | sub_main | fn | loop_for)*
-start: (T_COMMENT | stmt_var_decl)*
+start: (T_COMMENT | stmt_var_decl | stmt_var_assgn)*
 
 T_COMMENT: /'[^\n]*/
 
@@ -264,11 +264,20 @@ stmt_var_decl: g_access_modifier? g_var_type stmt_var_decl_opts
 
 stmt_var_decl_opts: stmt_var_decl_seq
 stmt_var_decl_seq: stmt_var_decl_seq stmt_var_decl_comma stmt_var_decl_item | stmt_var_decl_item
-stmt_var_decl_item: stmt_var_decl_identifier (T_KW_AS g_var_data_type)?
+stmt_var_decl_item: stmt_var_decl_identifier (T_KW_AS g_var_data_type)? stmt_var_assgn_rhs?
 
 //// Contextual Non-Terminals
 stmt_var_decl_identifier: T_IDENTIFIER
 stmt_var_decl_comma: T_PUNCT_COMMA
+
+// Variable Assignments
+stmt_var_assgn: stmt_var_reg_assgn | stmt_var_set_assgn
+stmt_var_assgn_rhs: T_OP_ASSGN g_var_assgn_val
+stmt_var_reg_assgn: stmt_var_assgn_identifier stmt_var_assgn_rhs
+stmt_var_set_assgn: T_KW_SET stmt_var_reg_assgn
+
+//// Contextual Non-Terminals
+stmt_var_assgn_identifier: T_IDENTIFIER
 
 g_var_assgn_val: T_STRING_LITERAL | T_KW_FALSE | T_KW_TRUE | T_INT
 g_access_modifier: T_KW_PRIVATE | T_KW_PROTECTED | T_KW_FRIEND | T_KW_PUBLIC | T_KW_PROTECTED T_KW_FRIEND
