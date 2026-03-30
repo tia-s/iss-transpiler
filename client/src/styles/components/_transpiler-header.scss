@@ -1,0 +1,41 @@
+.transpiler-header {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-6);
+  height: 60px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+
+  &__title {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  &__name {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+
+  &__idea {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  &__transpiler {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    font-weight: 400;
+    color: var(--color-text-dim);
+  }
+
+  &__sub {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+  }
+}

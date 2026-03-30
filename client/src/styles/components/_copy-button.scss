@@ -1,0 +1,7 @@
+@use '../mixins' as *;
+
+.copy-btn {
+  @include icon-btn;
+  width: 28px;
+  height: 28px;
+}
