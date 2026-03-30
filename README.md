@@ -1,7 +1,6 @@
 # iss-transpiler
-
-A transpiler to convert IDEAScript to Pandas. Additional target frameworks/languages can be configured by implementing a new Translator. 
-
+A transpiler to convert IDEAScript to Pandas. Additional target frameworks/languages can be configured by implementing a new Translator.
+```
 isstranspiler/
 ├── client/
 │   ├── public/
@@ -20,7 +19,7 @@ isstranspiler/
 │   │   ├── App.vue
 │   │   ├── main.ts
 │   │   └── styles/
-            └── main.scss
+│   │       └── main.scss
 │   ├── vite.config.ts
 │   └── tsconfig.json
 └── server/
